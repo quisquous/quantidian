@@ -1,7 +1,7 @@
 Meteor.startup(function() {
   var initCategories = function() {
     Categories.insert({
-      name: 'test',
+      name: 'test1',
       longdesc: 'This is a test prompt.',
       type: 'multiplechoice',
       timestamp: (new Date()).getTime(),
@@ -14,7 +14,7 @@ Meteor.startup(function() {
       ],
     });
     Categories.insert({
-      name: 'TestLetters',
+      name: 'test2',
       longdesc: 'Pick the letter you feel best describes you.',
       type: 'multiplechoice',
       timestamp: (new Date()).getTime(),
@@ -24,6 +24,12 @@ Meteor.startup(function() {
         { desc: 'Q', value: 'Q' },
         { desc: 'Z', value: 'Z' },
       ],
+    });
+    Categories.insert({
+      name: 'test3',
+      longdesc: 'Make a note.',
+      type: 'text',
+      timestamp: (new Date()).getTime(),
     });
   };
 

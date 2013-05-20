@@ -2,7 +2,7 @@ Categories = new Meteor.Collection('categories');
 
 function subscribedCategoryIds() {
   // FIXME: Need to add a user here and find the categories they care about.
-  var test = Categories.find({name: {$in: ['test', 'TestLetters']}});
+  var test = Categories.find({name: {$in: ['test1', 'test2', 'test3']}});
   return test.map(function(item) { return item._id; });
 }
 

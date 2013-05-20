@@ -31,15 +31,23 @@
 
 <template name="category">
   <div class="category {{selectionClass}}">
+    <div class="question">{{longdesc}}</div>
+    <!-- FIXME: this should probably be JS -->
     {{#if typeIs "multiplechoice"}}
-      {{> multiplechoice}}
+      {{> type_multiplechoice}}
+    {{/if}}
+    {{#if typeIs "text"}}
+      {{> type_text}}
     {{/if}}
   </div>
 </template>
 
-<template name="multiplechoice">
-  <div class="question">{{longdesc}}</div>
+<template name="type_multiplechoice">
   {{#each choices}}
     <div class="choice">{{desc}}</div>
   {{/each}}
+</template>
+
+<template name="type_text">
+  <input type="text"></input>
 </template>
