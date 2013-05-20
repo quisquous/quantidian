@@ -1,0 +1,25 @@
+<head>
+  <title>quantidian</title>
+</head>
+
+<body>
+  {{> categories}}
+</body>
+
+<template name="categories">
+  {{#each subscribed}}
+    {{> category}}
+  {{/each}}
+</template>
+
+<template name="category">
+  {{#if typeIs "multiplechoice"}}
+    {{> multiplechoice}}
+  {{/if}}
+</template>
+
+<template name="multiplechoice">
+  {{#each choices}}
+    <div class="choice">{{desc}}</div>
+  {{/each}}
+</template>
