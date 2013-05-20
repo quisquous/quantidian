@@ -3,8 +3,12 @@
 </head>
 
 <body>
-  {{> topLevelCategories}}
-  {{> categories}}
+  {{#if currentUser}}
+    {{> topLevelCategories}}
+    {{> categories}}
+  {{else}}
+    {{loginButtons}}
+  {{/if}}
 </body>
 
 <template name="topLevelCategories">
