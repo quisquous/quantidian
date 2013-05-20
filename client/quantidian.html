@@ -3,22 +3,42 @@
 </head>
 
 <body>
+  {{> topLevelCategories}}
   {{> categories}}
 </body>
 
+<template name="topLevelCategories">
+  <div class="topCategoryContainer">
+    {{#each subscribed}}
+      {{> topLevelCategory}}
+    {{/each}}
+  </div>
+</template>
+
+<template name="topLevelCategory">
+  <div class="topCategory {{selectionClass}}">
+    {{name}}
+  </div>
+</template>
+
 <template name="categories">
-  {{#each subscribed}}
-    {{> category}}
-  {{/each}}
+  <div class="categoryContainer">
+    {{#each subscribed}}
+      {{> category}}
+    {{/each}}
+  </div>
 </template>
 
 <template name="category">
-  {{#if typeIs "multiplechoice"}}
-    {{> multiplechoice}}
-  {{/if}}
+  <div class="category {{selectionClass}}">
+    {{#if typeIs "multiplechoice"}}
+      {{> multiplechoice}}
+    {{/if}}
+  </div>
 </template>
 
 <template name="multiplechoice">
+  <div class="question">{{longdesc}}</div>
   {{#each choices}}
     <div class="choice">{{desc}}</div>
   {{/each}}

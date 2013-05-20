@@ -1,3 +1,39 @@
+.topCategoryContainer {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+
+.topCategory {
+  margin: 10px;
+  border: 3px solid black;
+  height: 100px;
+  width: 100px;
+}
+
+.topCategory.unselected {
+  background-color: gray;
+}
+
+.topCategory.selected {
+  background-color: blue;
+}
+
+.categoryContainer {
+  position: absolute;
+  left: 200px;
+  top: 0px;
+}
+
+.category {
+  position: absolute;
+  top: 0px;
+}
+
+.category.unselected {
+  display: none;
+}
+
 .choice {
   margin: 5px;
   border: 1px solid black;
