@@ -1,7 +1,10 @@
-.topCategoryContainer {
-  position: absolute;
+.underLogContainer {
+  position: relative;
   left: 0px;
   top: 0px;
+}
+
+.topCategoryContainer {
 }
 
 .topCategory {
@@ -43,4 +46,11 @@
 
 .choice.selected {
   background-color: blue;
+}
+
+.logContainer {
+}
+
+.logLine {
+  color: gray;
 }

@@ -4,12 +4,23 @@
 
 <body>
   {{#if currentUser}}
-    {{> topLevelCategories}}
-    {{> categories}}
+    {{> logEntries}}
+    <div class="underLogContainer">
+      {{> topLevelCategories}}
+      {{> categories}}
+    </div>
   {{else}}
     {{loginButtons}}
   {{/if}}
 </body>
+
+<template name="logEntries">
+  <div class="logContainer">
+    {{#each recentLogs}}
+      <div class="logLine">{{stringifyLog}}</div>
+    {{/each}}
+  </div>
+</template>
 
 <template name="topLevelCategories">
   <div class="topCategoryContainer">

@@ -15,8 +15,7 @@ function subscribedCategoryIds() {
 function subscribedCategories() {
   // FIXME: subscribedCategories is an ordered list.  Need to respect that
   // order through the map here.
-  var cursor = Categories.find({'_id': {$in: subscribedCategoryIds()}});
-  return cursor.map(function(item) { return item; });
+  return Categories.find({'_id': {$in: subscribedCategoryIds()}}).fetch();
 }
 
 function logData(categoryId, value) {
@@ -70,4 +69,38 @@ Template.type_choice.events({
 Template.type_choice.selectionClass = function() {
   var selected = Session.equals("selectedChoice", this.value);
   return selected ? "selected" : "unselected";
+}
+
+Template.logEntries.recentLogs = function() {
+  var limit = 10;
+  var logs = Data.find(
+    {
+      user_id: Meteor.userId(),
+      deleted: false
+    },
+    {
+      sort: {created: -1},
+      limit: limit,
+    }
+  ).fetch();
+  return logs;
+}
+
+Template.logEntries.stringifyLog = function() {
+  var category = Categories.findOne({'_id': this.category_id});
+  if (!category)
+    return "error: couldn't find category";
+  var date = new Date(this.created);
+  var dateString = date.toDateString() + " " + date.toTimeString();
+  if (category.type === "multiplechoice") {
+    var searchValue = this.value;
+    var choice = _.find(category.choices, function(choice) {
+      return choice.value === searchValue;
+    });
+    return category.name + ": " + choice.desc + " (" + dateString + ")";
+  } else if (category.type == "text") {
+    return category.name + ": " + this.value + " (" + dateString + ")";
+  } else {
+    return "error"
+  }
 }

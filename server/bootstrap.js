@@ -33,9 +33,6 @@ Meteor.startup(function() {
     });
   };
 
-  // FIXME: temporary auto-create entries
-  Categories.remove({});
-
   if (Categories.find().count() === 0) {
     initCategories();
   }
