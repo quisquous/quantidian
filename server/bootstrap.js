@@ -4,7 +4,7 @@ Meteor.startup(function() {
       name: 'test1',
       longdesc: 'This is a test prompt.',
       type: 'multiplechoice',
-      timestamp: (new Date()).getTime(),
+      timestamp: new Date().getTime(),
       choices: [
         { desc: 'Terrible', value: 1 },
         { desc: 'Bad', value: 2 },
@@ -17,7 +17,7 @@ Meteor.startup(function() {
       name: 'test2',
       longdesc: 'Pick the letter you feel best describes you.',
       type: 'multiplechoice',
-      timestamp: (new Date()).getTime(),
+      timestamp: new Date().getTime(),
       choices: [
         { desc: 'A', value: 'A' },
         { desc: '\u03A0', value: '\u03A0' },
@@ -29,7 +29,7 @@ Meteor.startup(function() {
       name: 'test3',
       longdesc: 'Make a note.',
       type: 'text',
-      timestamp: (new Date()).getTime(),
+      timestamp: new Date().getTime(),
     });
   };
 
