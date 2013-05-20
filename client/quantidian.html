@@ -38,7 +38,9 @@
     <div class="question">{{longdesc}}</div>
     <!-- FIXME: this should probably be JS -->
     {{#if typeIs "multiplechoice"}}
-      {{> type_multiplechoice}}
+      {{#each choices}}
+        {{> type_choice}}
+      {{/each}}
     {{/if}}
     {{#if typeIs "text"}}
       {{> type_text}}
@@ -46,10 +48,8 @@
   </div>
 </template>
 
-<template name="type_multiplechoice">
-  {{#each choices}}
-    <div class="choice">{{desc}}</div>
-  {{/each}}
+<template name="type_choice">
+  <div class="choice {{selectionClass}}">{{desc}}</div>
 </template>
 
 <template name="type_text">

@@ -18,8 +18,9 @@ Template.categories.subscribed = subscribedCategories;
 
 Template.topLevelCategories.events({
   'click': function() {
+    Session.set("selectedChoice", undefined);
     Session.set("selectedCategory", this._id);
-  }
+  },
 });
 
 Template.category.typeIs = function(type) {
@@ -31,3 +32,14 @@ Template.category.selectionClass = function() {
   return selected ? "selected" : "unselected";
 };
 Template.topLevelCategory.selectionClass = Template.category.selectionClass;
+
+Template.type_choice.events({
+  'click': function() {
+    Session.set("selectedChoice", this.value);
+  },
+});
+
+Template.type_choice.selectionClass = function() {
+  var selected = Session.equals("selectedChoice", this.value);
+  return selected ? "selected" : "unselected";
+}
