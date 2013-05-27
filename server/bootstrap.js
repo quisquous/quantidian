@@ -15,7 +15,7 @@ Meteor.startup(function() {
     });
     Categories.insert({
       name: 'test2',
-      longdesc: 'Pick the letter you feel best describes you.',
+      longdesc: 'Pick a letter.',
       type: 'multiplechoice',
       timestamp: new Date().getTime(),
       choices: [

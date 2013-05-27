@@ -38,25 +38,11 @@ function logData(categoryId, value) {
   // FIXME: Need some animation here about this getting recorded?
 }
 
-Template.topLevelCategories.subscribed = subscribedCategories;
-Template.categories.subscribed = subscribedCategories;
-
-Template.topLevelCategories.events({
-  'click': function() {
-    Session.set("selectedChoice", undefined);
-    Session.set("selectedCategory", this._id);
-  },
-});
+Template.main.subscribed = subscribedCategories;
 
 Template.category.typeIs = function(type) {
   return this.type === type;
 };
-
-Template.category.selectionClass = function() {
-  var selected = Session.equals("selectedCategory", this._id);
-  return selected ? "selected" : "unselected";
-};
-Template.topLevelCategory.selectionClass = Template.category.selectionClass;
 
 Template.type_choice.events({
   'click': function() {
@@ -66,10 +52,12 @@ Template.type_choice.events({
   },
 });
 
-Template.type_choice.selectionClass = function() {
-  var selected = Session.equals("selectedChoice", this.value);
-  return selected ? "selected" : "unselected";
-}
+Template.main.events({
+  // FIXME: This really should be the Bootstrap 'shown' event.
+  'click': function(e) {
+    Session.set("selectedCategory", this._id);
+  },
+});
 
 Template.logEntries.recentLogs = function() {
   var limit = 10;

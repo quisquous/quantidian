@@ -4,49 +4,44 @@
 
 <body>
   {{#if currentUser}}
-    {{> logEntries}}
-    <div class="underLogContainer">
-      {{> topLevelCategories}}
-      {{> categories}}
-    </div>
+    {{> main}}
   {{else}}
     {{loginButtons}}
   {{/if}}
 </body>
 
+<template name="main">
+  <div class="container-fluid">
+    <div class="span2 tabbable tabs-left">
+      <ul class="nav nav-tabs">
+        <li class="active"><a href="#maintab" data-toggle="tab">Home</a></li>
+        {{#each subscribed}}
+          <li><a href="#{{_id}}" data-toggle="tab">{{name}}</a></li>
+        {{/each}}
+      </ul>
+    </div>
+    <div class="tab-content">
+      <div class="tab-pane active" id="maintab">
+        {{> logEntries}}
+      </div>
+      {{#each subscribed}}
+        {{> category}}
+      {{/each}}
+    </div>
+  </div>
+</template>
+
 <template name="logEntries">
   <div class="logContainer">
     {{#each recentLogs}}
-      <div class="logLine">{{stringifyLog}}</div>
-    {{/each}}
-  </div>
-</template>
-
-<template name="topLevelCategories">
-  <div class="topCategoryContainer">
-    {{#each subscribed}}
-      {{> topLevelCategory}}
-    {{/each}}
-  </div>
-</template>
-
-<template name="topLevelCategory">
-  <div class="topCategory {{selectionClass}}">
-    {{name}}
-  </div>
-</template>
-
-<template name="categories">
-  <div class="categoryContainer">
-    {{#each subscribed}}
-      {{> category}}
+      <div class="text-info">{{stringifyLog}}</div>
     {{/each}}
   </div>
 </template>
 
 <template name="category">
-  <div class="category {{selectionClass}}">
-    <div class="question">{{longdesc}}</div>
+  <div class="tab-pane category" id="{{_id}}">
+    <h1 class="question">{{longdesc}}</h1>
     <!-- FIXME: this should probably be JS -->
     {{#if typeIs "multiplechoice"}}
       {{#each choices}}
@@ -60,9 +55,9 @@
 </template>
 
 <template name="type_choice">
-  <div class="choice {{selectionClass}}">{{desc}}</div>
+  <button class="btn btn-large btn-primary btn-block">{{desc}}</button>
 </template>
 
 <template name="type_text">
-  <input type="text"></input>
+  <input class="input-xxlarge" type="text"></input>
 </template>
