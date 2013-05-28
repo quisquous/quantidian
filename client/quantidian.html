@@ -12,15 +12,15 @@
 
 <template name="main">
   <div class="container-fluid">
-    <div class="span2 tabbable tabs-left">
-      <ul class="nav nav-tabs">
+    <div class="span3 tabbable tabs-left">
+      <ul id="categoryTabs" class="nav nav-tabs">
         <li class="active"><a href="#maintab" data-toggle="tab">Home</a></li>
         {{#each subscribed}}
-          <li><a href="#{{_id}}" data-toggle="tab">{{name}}</a></li>
+          <li class="categoryTab"><a href="#{{_id}}" data-toggle="tab">{{name}}</a></li>
         {{/each}}
       </ul>
     </div>
-    <div class="tab-content">
+    <div class="span9 tab-content">
       <div class="tab-pane active" id="maintab">
         {{> logEntries}}
       </div>
@@ -29,6 +29,7 @@
       {{/each}}
     </div>
   </div>
+  {{> dataModal}}
 </template>
 
 <template name="logEntries">
@@ -45,19 +46,44 @@
     <!-- FIXME: this should probably be JS -->
     {{#if typeIs "multiplechoice"}}
       {{#each choices}}
-        {{> type_choice}}
+        {{> typeChoice}}
       {{/each}}
     {{/if}}
     {{#if typeIs "text"}}
-      {{> type_text}}
+      {{> typeText}}
     {{/if}}
   </div>
 </template>
 
-<template name="type_choice">
+<template name="typeChoice">
   <button class="btn btn-large btn-primary btn-block">{{desc}}</button>
 </template>
 
-<template name="type_text">
-  <input class="input-xxlarge" type="text"></input>
+<template name="typeText">
+  <div>
+    <input class="text input-xxlarge" type="text"></input>
+  </div>
+  <button class="save btn btn-large btn-primary">Save</button>
+</template>
+
+<template name="dataModal">
+  <div id="dataModal" class="modal hide fade">
+    {{#with confirmData}}
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">×</button>
+      </div>
+      <div class="modal-body">
+        <h1>{{categoryName}}: {{valueString}}</h1>
+        <p>Time: {{dateString}}</p>
+        <p>Location: {{locationString}}</p>
+
+        <label>Comment</label>
+        <input id="modalComment" class="input-large" type="text"></input>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-large" data-dismiss="modal">Close</button>
+        <button class="accept btn btn-large btn-primary">Save</button>
+      </div>
+    {{/with}}
+  </div>
 </template>
