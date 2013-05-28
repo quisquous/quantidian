@@ -16,7 +16,7 @@
       <ul id="categoryTabs" class="nav nav-tabs">
         <li class="active"><a href="#maintab" data-toggle="tab">Home</a></li>
         {{#each subscribed}}
-          <li class="categoryTab"><a href="#{{_id}}" data-toggle="tab">{{name}}</a></li>
+          <li class="categoryTab" category="{{_id}}"><a href="#{{_id}}" data-toggle="tab">{{name}}</a></li>
         {{/each}}
       </ul>
     </div>
@@ -29,7 +29,6 @@
       {{/each}}
     </div>
   </div>
-  {{> dataModal}}
 </template>
 
 <template name="logEntries">
@@ -42,48 +41,37 @@
 
 <template name="category">
   <div class="tab-pane category" id="{{_id}}">
-    <h1 class="question">{{longdesc}}</h1>
-    <!-- FIXME: this should probably be JS -->
-    {{#if typeIs "multiplechoice"}}
-      {{#each choices}}
-        {{> typeChoice}}
-      {{/each}}
-    {{/if}}
-    {{#if typeIs "text"}}
-      {{> typeText}}
-    {{/if}}
+    {{#each questions}}
+      <label>{{label}}</label>
+      <!-- FIXME: this should probably be JS -->
+      {{#if typeIs "multiplechoice"}}
+        <div class="btn-group" data-toggle="buttons-radio">
+          {{#each choices}}
+            {{> typeChoice}}
+          {{/each}}
+        </div>
+      {{/if}}
+      {{#if typeIs "text"}}
+        {{> typeText}}
+      {{/if}}
+    {{/each}}
+    <div>
+      <label>Optional comment:</label>
+      <input class="comment input-large" type="text"></input>
+    </div>
+
+    <div>
+      <button class="save btn btn-large btn-primary">Save</button>
+    </div>
   </div>
 </template>
 
 <template name="typeChoice">
-  <button class="btn btn-large btn-primary btn-block">{{desc}}</button>
+  <button class="userinput btn btn-large" value="{{value}}">{{desc}}</button>
 </template>
 
 <template name="typeText">
   <div>
-    <input class="text input-xxlarge" type="text"></input>
-  </div>
-  <button class="save btn btn-large btn-primary">Save</button>
-</template>
-
-<template name="dataModal">
-  <div id="dataModal" class="modal hide fade">
-    {{#with confirmData}}
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">×</button>
-      </div>
-      <div class="modal-body">
-        <h1>{{categoryName}}: {{valueString}}</h1>
-        <p>Time: {{dateString}}</p>
-        <p>Location: {{locationString}}</p>
-
-        <label>Comment</label>
-        <input id="modalComment" class="input-large" type="text"></input>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-large" data-dismiss="modal">Close</button>
-        <button class="accept btn btn-large btn-primary">Save</button>
-      </div>
-    {{/with}}
+    <input class="userinput active input-xxlarge" type="text"></input>
   </div>
 </template>
