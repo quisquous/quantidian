@@ -36,7 +36,6 @@ Template.category.events({
     if (values.length !== category.questions.length)
       return;
 
-    var comment = template.findAll('.comment')[0].value;
     var timestamp = new Date().getTime();
     var data = {
       user_id: Meteor.userId(),
@@ -45,7 +44,6 @@ Template.category.events({
       created: timestamp,
       modified: timestamp,
       deleted: false,
-      comment: comment,
       value: values,
     };
     if (userLocation) {
@@ -78,11 +76,7 @@ Template.logEntries.stringifyLog = function() {
   var dateString = dateToString(this.created);
   if (!category || !value)
     return;
-  var commentString = "";
-  if (this.comment) {
-    commentString = ' "' + this.comment + '"';
-  }
-  return category + ": " + value + commentString + " (" + dateString + ")";
+  return category + ": " + value + " (" + dateString + ")";
 }
 
 function categoryToString(id) {

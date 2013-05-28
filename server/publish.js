@@ -1,7 +1,8 @@
 // name: String, a short-hand name for the category, e.g. "mood" or "beer"
-// longdesc: String, a prompt for the user
+// longdesc: String, a longer description for use when subscribin
 // type: String, a string corresponding to a Type
 // timestamp: time of creation
+// questions: Array, an array of question objects 
 // TODO:
 // creator: id (from users)
 Categories = new Meteor.Collection('categories');

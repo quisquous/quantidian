@@ -1,5 +1,3 @@
-// FIXME: Add optional boolean to questions.
-
 Meteor.startup(function() {
   var initCategories = function() {
     Categories.insert({
@@ -10,6 +8,7 @@ Meteor.startup(function() {
         {
           label: "This is a test prompt",
           type: 'multiplechoice',
+          optional: false,
           choices: [
             { desc: 'Terrible', value: 1 },
             { desc: 'Bad', value: 2 },
@@ -17,6 +16,11 @@ Meteor.startup(function() {
             { desc: 'Good', value: 4 },
             { desc: 'Fantastic', value: 5 },
           ],
+        },
+        {
+          label: "Optional comment",
+          type: 'text',
+          optional: true,
         },
       ],
     });
@@ -28,6 +32,7 @@ Meteor.startup(function() {
         {
           label: 'Some text',
           type: 'multiplechoice',
+          optional: false,
           choices: [
             { desc: 'A', value: 'A' },
             { desc: '\u03A0', value: '\u03A0' },
@@ -37,6 +42,7 @@ Meteor.startup(function() {
         },
         {
           label: 'Type something here',
+          optional: false,
           type: 'text',
         },
       ],
@@ -48,6 +54,7 @@ Meteor.startup(function() {
       questions: [
         {
           label: 'Make a note.',
+          optional: false,
           type: 'text',
         },
       ],
