@@ -124,3 +124,69 @@ function dateToString(timestamp) {
   var date = new Date(timestamp);
   return date.toDateString() + " " + date.toTimeString();
 }
+
+Template.editor.questionTypes = function() {
+  return [
+    { name: 'Multiple Choice', key: 'multiplechoice' },
+    { name: 'Text', key: 'text' },
+  ];
+};
+
+Template.editor.questions = function() {
+  var questions = Session.get('editorQuestions');
+  if (questions) {
+    return questions;
+  }
+
+  editorAddQuestion();
+  return Session.get('editorQuestions');
+};
+
+function editorAddQuestion() {
+  var questions = Session.get('editorQuestions');
+  var new_num;
+  if (!questions || !questions.length) {
+    questions = [];
+    new_num = 1;  // displayed to the user, so start at 1
+  } else {
+    new_num = _.max(questions, function(q) { return q.num; }).num + 1;
+  }
+
+  questions.push({
+    num: new_num,
+    type: 'text',
+  });
+  Session.set('editorQuestions', questions);
+  console.log('Adding question: ' + new_num);
+}
+
+Template.editor.events({
+  'click .addquestion': function(evt, template) {
+    editorAddQuestion();
+  },
+  'click .deletequestion': function(evt, template) {
+    var target = evt.target;
+    if (!target) {
+      console.error('Missing target');
+      return;
+    }
+    var num = target.getAttribute('question');
+    if (num === undefined) {
+      console.error('Missing number');
+      return;
+    }
+    var questions = Session.get('editorQuestions');
+    if (!questions) {
+      console.error('Missing questions');
+      return;
+    }
+    questions = _.filter(questions, function(q) { return q.num != num; });
+
+    var count = 1;
+    _.each(questions, function(q) { q.num = count++; });
+
+    Session.set('editorQuestions', questions);
+  },
+  'click .savecategory': function(evt, template) {
+  },
+});

@@ -15,6 +15,7 @@
     <div class="span2 tabbable tabs-left">
       <ul id="categoryTabs" class="nav nav-tabs">
         <li class="active"><a href="#maintab" data-toggle="tab">Home</a></li>
+        <li><a href="#editor" data-toggle="tab">Editor</a></li>
         {{#each subscribed}}
           <li class="categoryTab" category="{{_id}}"><a href="#{{_id}}" data-toggle="tab">{{name}}</a></li>
         {{/each}}
@@ -23,6 +24,9 @@
     <div class="span8 tab-content">
       <div class="tab-pane active" id="maintab">
         {{> logEntries}}
+      </div>
+      <div class="tab-pane" id="editor">
+        {{> editor}}
       </div>
       {{#each subscribed}}
         {{> category}}
@@ -69,4 +73,30 @@
   <div>
     <input class="userinput active input-xxlarge" type="text"></input>
   </div>
+</template>
+
+<template name="editor">
+  <button class="addquestion btn btn-large">Add Question</button>
+  {{#each questions}}
+    <div class="editorquestion" question="{{num}}">
+      <p>Question {{num}}</p>
+      <div>
+        <input class="active" type="text" placeholder="Enter a prompt..."></input>
+      </div>
+      <select class="type">
+        {{#each questionTypes}}
+          <option value="{{key}}">{{name}}</option>
+        {{/each}}
+      </select>
+      <div>
+        <label class="checkbox">
+          Optional <input type="checkbox" class="optional"></input>
+        </label>
+      </div>
+      <div>
+        <button class="deletequestion btn" question="{{num}}">Delete Question</button>
+      </div>
+    </div>
+  {{/each}}
+  <button class="savecategory btn btn-large btn-primary">Save</button>
 </template>
