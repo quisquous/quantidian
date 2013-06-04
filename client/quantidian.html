@@ -75,20 +75,28 @@
 </template>
 
 <template name="editor">
-  <button class="addquestion btn btn-large">Add Question</button>
-  {{#each questions}}
-    {{> editorQuestion}}
-  {{/each}}
-  {{#if questions}}
-    <button class="savecategory btn btn-large btn-primary">Save</button>
-  {{/if}}
+  {{#with editor}}
+    <div>
+      <input class="categoryname" type="text" placeholder="Category Name" value="{{name}}"></input>
+    </div>
+    <div>
+      <input class="categorydesc" type="text" placeholder="Category Description" value="{{longdesc}}"></input>
+    </div>
+    <button class="addquestion btn btn-large">Add Question</button>
+    {{#each questions}}
+      {{> editorQuestion}}
+    {{/each}}
+    {{#if questions}}
+      <button class="savecategory btn btn-large btn-primary">Save</button>
+    {{/if}}
+  {{/with}}
 </template>
 
 <template name="editorQuestion">
   <div class="editorquestion">
     <p>Question {{num}}</p>
     <div>
-      <input class="prompt" type="text" placeholder="Enter a prompt..." value="{{prompt}}"></input>
+      <input class="prompt" type="text" placeholder="Enter a prompt..." value="{{label}}"></input>
     </div>
     <select class="type">
       {{#each questionTypes}}
@@ -100,7 +108,7 @@
       {{#each choices}}
         <div class="editorchoice" num="{{num}}">
           <p>Choice {{num}}</p>
-          <input class="choicetext" type="text" placeholder="Choice text" value="{{text}}"></input>
+          <input class="choicetext" type="text" placeholder="Choice text" value="{{desc}}"></input>
           <input class="choicevalue" type="text" placeholder="Choice value" value="{{value}}"></input>
           <div>
             <button class="deletechoice btn">Delete Choice</button>

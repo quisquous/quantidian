@@ -6,10 +6,16 @@ navigator.geolocation.getCurrentPosition(function(position) {
   userLocation = position;
 });
 
+function pluckId(cursor) {
+  return cursor.map(function(item) { return item._id; });
+}
+
 function subscribedCategoryIds() {
   // FIXME: Need to add a user here and find the categories they care about.
   var test = Categories.find({name: {$in: ['test1', 'test2', 'test3']}});
-  return test.map(function(item) { return item._id; });
+  var userCreated = Categories.find({creator: Meteor.userId()});
+
+  return pluckId(test).concat(pluckId(userCreated));
 }
 
 function subscribedCategories() {
@@ -125,39 +131,41 @@ function dateToString(timestamp) {
   return date.toDateString() + " " + date.toTimeString();
 }
 
-Template.editor.questions = function() {
-  var questions = Session.get('editorQuestions');
-  if (questions) {
-    return questions;
+Template.editor.editor = function() {
+  var editor = Session.get('editor');
+  if (!editor) {
+    Session.set('editor', {});
   }
 
-  editorAddQuestion();
-  return Session.get('editorQuestions');
-};
+  if (!editor.questions || !editor.questions.length) {
+    editorAddQuestion();
+  }
+  return Session.get('editor');
+}
 
 function editorAddQuestion() {
-  var questions = Session.get('editorQuestions');
+  var editor = Session.get('editor');
   var new_num;
-  if (!questions || !questions.length) {
-    questions = [];
+  if (!editor.questions || !editor.questions.length) {
+    editor.questions = [];
     new_num = 1;  // displayed to the user, so start at 1
   } else {
-    new_num = _.max(questions, function(q) { return q.num; }).num + 1;
+    new_num = _.max(editor.questions, function(q) { return q.num; }).num + 1;
   }
 
-  questions.push({
+  editor.questions.push({
     num: new_num,
     type: 'text',
     optional: false,
   });
-  Session.set('editorQuestions', questions);
+  Session.set('editor', editor);
 
   editorAddChoice(new_num);
 }
 
 function editorAddChoice(num) {
-  var questions = Session.get('editorQuestions');
-  var q = _.find(questions, function(q) { return q.num == num; });
+  var editor = Session.get('editor');
+  var q = _.find(editor.questions, function(q) { return q.num == num; });
 
   var new_num;
   if (!q.choices || !q.choices.length) {
@@ -172,15 +180,15 @@ function editorAddChoice(num) {
     text: '',
     value: '',
   });
-  Session.set('editorQuestions', questions);
+  Session.set('editor', editor);
 }
 
 function editorUpdateChoice(question_num, choice_num, key, value) {
-  var questions = Session.get('editorQuestions');
-  var q = _.find(questions, function(q) { return q.num == question_num; });
+  var editor = Session.get('editor');
+  var q = _.find(editor.questions, function(q) { return q.num == question_num; });
   var c = _.find(q.choices, function(c) { return c.num == choice_num; });
   c[key] = value;
-  Session.set('editorQuestions', questions);
+  Session.set('editor', editor);
 }
 
 function removeAndRenumber(list, num) {
@@ -195,10 +203,29 @@ function choiceNumForElement(elem) {
 }
 
 Template.editor.events({
+  'change .categoryname': function(evt) {
+    editorUpdateField('name', evt.target.value);
+  },
+  'change .categorydesc': function(evt) {
+    editorUpdateField('longdesc', evt.target.value);
+  },
   'click .addquestion': function(evt, template) {
     editorAddQuestion();
   },
   'click .savecategory': function(evt, template) {
+    // FIXME: make sure required fields are filled in blah blah blah
+    // FIXME: probably should validate this too
+    var editor = Session.get('editor');
+
+    // Delete editor-only fields.
+    _.each(editor.questions, function(q) { delete q.num; });
+    _.each(editor.questions.choices, function(c) { delete c.num; });
+
+    editor.creator = Meteor.userId();
+    editor.timestamp = new Date().getTime();
+    Categories.insert(editor);
+
+    Session.set('editor', {});
   },
 });
 
@@ -209,19 +236,25 @@ Template.editorQuestion.questionTypes = function() {
   ];
 };
 
+function editorUpdateField(key, value) {
+  var editor = Session.get('editor');
+  editor[key] = value;
+  Session.set('editor', editor);
+}
+
 function editorUpdateQuestion(num, key, value) {
-  var questions = Session.get('editorQuestions');
-  var q = _.find(questions, function(q) { return q.num == num; });
+  var editor = Session.get('editor');
+  var q = _.find(editor.questions, function(q) { return q.num == num; });
   if (!q) {
     return;
   }
   q[key] = value;
-  Session.set('editorQuestions', questions);
+  Session.set('editor', editor);
 }
 
 Template.editorQuestion.events({
   'change .prompt': function(evt, template) {
-    editorUpdateQuestion(template.data.num, 'prompt', evt.target.value);
+    editorUpdateQuestion(template.data.num, 'label', evt.target.value);
   },
   'change .optional': function(evt, template) {
     editorUpdateQuestion(template.data.num, 'optional', evt.target.checked);
@@ -230,11 +263,11 @@ Template.editorQuestion.events({
     editorUpdateQuestion(template.data.num, 'type', evt.target.value);
   },
   'click .deletequestion': function(evt, template) {
-    var questions = Session.get('editorQuestions');
-    questions = removeAndRenumber(questions, template.data.num);
-    Session.set('editorQuestions', questions);
+    var editor = Session.get('editor');
+    editor.questions = removeAndRenumber(editor.questions, template.data.num);
+    Session.set('editor', editor);
 
-    if (!questions.length) {
+    if (!editor.questions.length) {
       editorAddQuestion();
     }
   },
@@ -242,18 +275,18 @@ Template.editorQuestion.events({
     editorAddChoice(template.data.num);
   },
   'click .deletechoice': function(evt, template) {
-    var questions = Session.get('editorQuestions');
-    var q = _.find(questions, function(q) { return q.num == template.data.num; });
+    var editor = Session.get('editor');
+    var q = _.find(editor.questions, function(q) { return q.num == template.data.num; });
     var choice_num = choiceNumForElement(evt.target);
     q.choices = removeAndRenumber(q.choices, choice_num);
-    Session.set('editorQuestions', questions);
+    Session.set('editor', editor);
 
     if (!q.choices.length) {
       editorAddChoice(template.data.num);
     }
   },
   'change .choicetext': function(evt, template) {
-    editorUpdateChoice(template.data.num, choiceNumForElement(evt.target), 'text', evt.target.value);
+    editorUpdateChoice(template.data.num, choiceNumForElement(evt.target), 'desc', evt.target.value);
   },
   'change .choicevalue': function(evt, template) {
     editorUpdateChoice(template.data.num, choiceNumForElement(evt.target), 'value', evt.target.value);
