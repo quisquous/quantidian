@@ -125,13 +125,6 @@ function dateToString(timestamp) {
   return date.toDateString() + " " + date.toTimeString();
 }
 
-Template.editor.questionTypes = function() {
-  return [
-    { name: 'Multiple Choice', key: 'multiplechoice' },
-    { name: 'Text', key: 'text' },
-  ];
-};
-
 Template.editor.questions = function() {
   var questions = Session.get('editorQuestions');
   if (questions) {
@@ -155,24 +148,49 @@ function editorAddQuestion() {
   questions.push({
     num: new_num,
     type: 'text',
+    optional: false,
   });
   Session.set('editorQuestions', questions);
-  console.log('Adding question: ' + new_num);
 }
 
 Template.editor.events({
   'click .addquestion': function(evt, template) {
     editorAddQuestion();
   },
+  'click .savecategory': function(evt, template) {
+  },
+});
+
+Template.editorQuestion.questionTypes = function() {
+  return [
+    { name: 'Multiple Choice', key: 'multiplechoice' },
+    { name: 'Text', key: 'text' },
+  ];
+};
+
+function editorUpdateQuestion(num, key, value) {
+  var questions = Session.get('editorQuestions');
+  var q = _.find(questions, function(q) { return q.num == num; });
+  if (!q) {
+    return;
+  }
+  q[key] = value;
+  Session.set('editorQuestions', questions);
+}
+
+Template.editorQuestion.events({
+  'change .prompt': function(evt, template) {
+    editorUpdateQuestion(template.data.num, 'prompt', evt.target.value);
+  },
+  'change .optional': function(evt, template) {
+    editorUpdateQuestion(template.data.num, 'optional', evt.target.checked);
+  },
+  'change .type': function(evt, template) {
+    editorUpdateQuestion(template.data.num, 'type', evt.target.value);
+  },
   'click .deletequestion': function(evt, template) {
-    var target = evt.target;
-    if (!target) {
-      console.error('Missing target');
-      return;
-    }
-    var num = target.getAttribute('question');
+    var num = template.data.num;
     if (num === undefined) {
-      console.error('Missing number');
       return;
     }
     var questions = Session.get('editorQuestions');
@@ -187,6 +205,20 @@ Template.editor.events({
 
     Session.set('editorQuestions', questions);
   },
-  'click .savecategory': function(evt, template) {
-  },
 });
+
+Template.editorQuestion.rendered = function() {
+  // This is easier to do in JavaScript than HTML.  Yuck.  :(
+
+  var type = this.data.type;
+  var typeOptionElem = $(this.firstNode).find('.type > option[value="' + type + '"]');
+  typeOptionElem.attr('selected', true);
+
+  var optional = this.data.optional;
+  var typeCheckboxElem = $(this.firstNode).find('.optional');
+  if (optional) {
+    typeCheckboxElem.attr('checked', true);
+  } else {
+    typeCheckboxElem.removeAttr('checked');
+  }
+};

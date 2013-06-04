@@ -1,5 +1,4 @@
 <head>
-  <title>quantidian</title>
 </head>
 
 <body>
@@ -78,25 +77,31 @@
 <template name="editor">
   <button class="addquestion btn btn-large">Add Question</button>
   {{#each questions}}
-    <div class="editorquestion" question="{{num}}">
-      <p>Question {{num}}</p>
-      <div>
-        <input class="active" type="text" placeholder="Enter a prompt..."></input>
-      </div>
-      <select class="type">
-        {{#each questionTypes}}
-          <option value="{{key}}">{{name}}</option>
-        {{/each}}
-      </select>
-      <div>
-        <label class="checkbox">
-          Optional <input type="checkbox" class="optional"></input>
-        </label>
-      </div>
-      <div>
-        <button class="deletequestion btn" question="{{num}}">Delete Question</button>
-      </div>
-    </div>
+    {{> editorQuestion}}
   {{/each}}
-  <button class="savecategory btn btn-large btn-primary">Save</button>
+  {{#if questions}}
+    <button class="savecategory btn btn-large btn-primary">Save</button>
+  {{/if}}
+</template>
+
+<template name="editorQuestion">
+  <div class="editorquestion">
+    <p>Question {{num}}</p>
+    <div>
+      <input class="prompt" type="text" placeholder="Enter a prompt..." value="{{prompt}}"></input>
+    </div>
+    <select class="type">
+      {{#each questionTypes}}
+        <option value="{{key}}">{{name}}</option>
+      {{/each}}
+    </select>
+    <div>
+      <label class="checkbox">
+        Optional <input type="checkbox" class="optional"></input>
+      </label>
+    </div>
+    <div>
+      <button class="deletequestion btn">Delete Question</button>
+    </div>
+  </div>
 </template>
