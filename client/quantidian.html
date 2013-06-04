@@ -12,7 +12,7 @@
 
 <template name="main">
   <div class="container-fluid">
-    <div class="span3 tabbable tabs-left">
+    <div class="span2 tabbable tabs-left">
       <ul id="categoryTabs" class="nav nav-tabs">
         <li class="active"><a href="#maintab" data-toggle="tab">Home</a></li>
         {{#each subscribed}}
@@ -20,7 +20,7 @@
         {{/each}}
       </ul>
     </div>
-    <div class="span9 tab-content">
+    <div class="span8 tab-content">
       <div class="tab-pane active" id="maintab">
         {{> logEntries}}
       </div>
