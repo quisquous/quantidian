@@ -95,6 +95,19 @@
         <option value="{{key}}">{{name}}</option>
       {{/each}}
     </select>
+    {{#if typeIs "multiplechoice"}}
+      <button class="addchoice btn">Add Choice</button>
+      {{#each choices}}
+        <div class="editorchoice" num="{{num}}">
+          <p>Choice {{num}}</p>
+          <input class="choicetext" type="text" placeholder="Choice text" value="{{text}}"></input>
+          <input class="choicevalue" type="text" placeholder="Choice value" value="{{value}}"></input>
+          <div>
+            <button class="deletechoice btn">Delete Choice</button>
+          </div>
+        </div>
+      {{/each}}
+    {{/if}}
     <div>
       <label class="checkbox">
         Optional <input type="checkbox" class="optional"></input>

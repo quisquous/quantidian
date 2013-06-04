@@ -151,6 +151,47 @@ function editorAddQuestion() {
     optional: false,
   });
   Session.set('editorQuestions', questions);
+
+  editorAddChoice(new_num);
+}
+
+function editorAddChoice(num) {
+  var questions = Session.get('editorQuestions');
+  var q = _.find(questions, function(q) { return q.num == num; });
+
+  var new_num;
+  if (!q.choices || !q.choices.length) {
+    q.choices = [];
+    new_num = 1;  // displayed to the user, so start at 1
+  } else {
+    new_num = _.max(q.choices, function(c) { return c.num; }).num + 1;
+  }
+
+  q.choices.push({
+    num: new_num,
+    text: '',
+    value: '',
+  });
+  Session.set('editorQuestions', questions);
+}
+
+function editorUpdateChoice(question_num, choice_num, key, value) {
+  var questions = Session.get('editorQuestions');
+  var q = _.find(questions, function(q) { return q.num == question_num; });
+  var c = _.find(q.choices, function(c) { return c.num == choice_num; });
+  c[key] = value;
+  Session.set('editorQuestions', questions);
+}
+
+function removeAndRenumber(list, num) {
+  list = _.filter(list, function(obj) { return obj.num != num; });
+  var count = 1;
+  _.each(list, function(obj) { obj.num = count++; });
+  return list;
+}
+
+function choiceNumForElement(elem) {
+  return $(elem).parents('.editorchoice').attr('num');
 }
 
 Template.editor.events({
@@ -189,21 +230,33 @@ Template.editorQuestion.events({
     editorUpdateQuestion(template.data.num, 'type', evt.target.value);
   },
   'click .deletequestion': function(evt, template) {
-    var num = template.data.num;
-    if (num === undefined) {
-      return;
-    }
     var questions = Session.get('editorQuestions');
-    if (!questions) {
-      console.error('Missing questions');
-      return;
-    }
-    questions = _.filter(questions, function(q) { return q.num != num; });
-
-    var count = 1;
-    _.each(questions, function(q) { q.num = count++; });
-
+    questions = removeAndRenumber(questions, template.data.num);
     Session.set('editorQuestions', questions);
+
+    if (!questions.length) {
+      editorAddQuestion();
+    }
+  },
+  'click .addchoice': function(evt, template) {
+    editorAddChoice(template.data.num);
+  },
+  'click .deletechoice': function(evt, template) {
+    var questions = Session.get('editorQuestions');
+    var q = _.find(questions, function(q) { return q.num == template.data.num; });
+    var choice_num = choiceNumForElement(evt.target);
+    q.choices = removeAndRenumber(q.choices, choice_num);
+    Session.set('editorQuestions', questions);
+
+    if (!q.choices.length) {
+      editorAddChoice(template.data.num);
+    }
+  },
+  'change .choicetext': function(evt, template) {
+    editorUpdateChoice(template.data.num, choiceNumForElement(evt.target), 'text', evt.target.value);
+  },
+  'change .choicevalue': function(evt, template) {
+    editorUpdateChoice(template.data.num, choiceNumForElement(evt.target), 'value', evt.target.value);
   },
 });
 
@@ -221,4 +274,8 @@ Template.editorQuestion.rendered = function() {
   } else {
     typeCheckboxElem.removeAttr('checked');
   }
+};
+
+Template.editorQuestion.typeIs = function(type) {
+  return this.type === type;
 };
