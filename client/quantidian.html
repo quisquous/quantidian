@@ -10,36 +10,46 @@
 </body>
 
 <template name="main">
-  <div class="container-fluid">
-    <div class="span2 tabbable tabs-left">
-      <ul id="categoryTabs" class="nav nav-tabs">
-        <li class="active"><a href="#maintab" data-toggle="tab">Home</a></li>
-        <li><a href="#editor" data-toggle="tab">Editor</a></li>
-        {{#each subscribed}}
-          <li class="categoryTab" category="{{_id}}"><a href="#{{_id}}" data-toggle="tab">{{name}}</a></li>
-        {{/each}}
+  <div class="page">
+    <header class="action-bar">
+      <a href="#" class="app-icon action"><i class="icon-star-full"></i></a>
+      <h1 class="title">Quantidian</h1>
+      <ul class="actions">
+        <li>
+          <a href="subscribe.html" class="action" title="Subscriptions">
+            <i class="icon-new"></i>
+          </a>
+        </li>
+        <li>
+          <a href="editor.html" class="action" title="Editor">
+            <i class="icon-edit"></i>
+          </a>
+        </li>
+        <li>
+          <a href="logs.html" class="action" title="Logs">
+            <i class="icon-view-as-list"></i>
+          </a>
+        </li>
       </ul>
-    </div>
-    <div class="span8 tab-content">
-      <div class="tab-pane active" id="maintab">
-        {{> logEntries}}
-      </div>
-      <div class="tab-pane" id="editor">
-        {{> editor}}
-      </div>
+    </header>
+    <div class="content inset">
       {{#each subscribed}}
-        {{> category}}
+        <a href="question.html?id=#{{_id}}">
+          <button type="button" class="btn btn-block">{{name}}</button>
+        </a>
       {{/each}}
+      {{> logEntries}}
     </div>
   </div>
 </template>
 
 <template name="logEntries">
-  <div class="logContainer">
-    {{#each recentLogs}}
-      <div class="text-info">{{stringifyLog}}</div>
-    {{/each}}
-  </div>
+  <ul class="list inset">
+    <li class="list-divider">Recent logs</li>
+      {{#each recentLogs}}
+        <li class="list-item-single-line">{{stringifyLog}}</li>
+      {{/each}}
+  </ul>
 </template>
 
 <template name="category">
