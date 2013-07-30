@@ -3,44 +3,60 @@
 
 <body>
   {{#if currentUser}}
-    {{> main}}
+    {{#isolate}}
+      <div class="page">
+        {{> actionBar}}
+        <div class="content inset">
+          {{renderPage}}
+        </div>
+      </div>
+    {{/isolate}}
   {{else}}
     {{loginButtons}}
   {{/if}}
 </body>
 
-<template name="main">
-  <div class="page">
-    <header class="action-bar">
+<template name="actionBar">
+  <header class="action-bar">
+    {{#if isPage "main"}}
       <a href="#" class="app-icon action"><i class="icon-star-full"></i></a>
-      <h1 class="title">Quantidian</h1>
-      <ul class="actions">
-        <li>
-          <a href="subscribe.html" class="action" title="Subscriptions">
-            <i class="icon-new"></i>
-          </a>
-        </li>
-        <li>
-          <a href="editor.html" class="action" title="Editor">
-            <i class="icon-edit"></i>
-          </a>
-        </li>
-        <li>
-          <a href="logs.html" class="action" title="Logs">
-            <i class="icon-view-as-list"></i>
-          </a>
-        </li>
-      </ul>
-    </header>
-    <div class="content inset">
-      {{#each subscribed}}
-        <a href="question.html?id=#{{_id}}">
-          <button type="button" class="btn btn-block">{{name}}</button>
+    {{else}}
+      <a href="/" class="app-icon action up">
+        <i class="chevron"></i>
+        <i class="icon-star-full"></i>
+      </a>
+    {{/if}}
+    {{#if subtitle}}
+      <h2 class="title">{{title}} <span class="subtitle">{{subtitle}}</span></h2>
+    {{else}}
+      <h1 class="title">{{title}}</h1>
+    {{/if}}
+    <ul class="actions pull-right">
+      <li>
+        <a href="/subscribe" class="action" title="Subscriptions">
+          <i class="icon-new"></i>
         </a>
-      {{/each}}
-      {{> logEntries}}
-    </div>
-  </div>
+      </li>
+      <li>
+        <a href="/editor" class="action" title="Editor">
+          <i class="icon-edit"></i>
+        </a>
+      </li>
+      <li>
+        <a href="/logs" class="action" title="Logs">
+          <i class="icon-view-as-list"></i> </a>
+      </li>
+    </ul>
+  </header>
+</template>
+
+<template name="main">
+  {{#each subscribed}}
+    <a href="question.html?id=#{{_id}}">
+      <button type="button" class="btn btn-block">{{name}}</button>
+    </a>
+  {{/each}}
+  {{> logEntries}}
 </template>
 
 <template name="logEntries">
@@ -85,21 +101,25 @@
 </template>
 
 <template name="editor">
-  {{#with editor}}
-    <div>
-      <input class="categoryname" type="text" placeholder="Category Name" value="{{name}}"></input>
+  <div class="page">
+    <div class="content">
+      {{#with editor}}
+        <div>
+          <input class="categoryname" type="text" placeholder="Category Name" value="{{name}}"></input>
+        </div>
+        <div>
+          <input class="categorydesc" type="text" placeholder="Category Description" value="{{longdesc}}"></input>
+        </div>
+        <button class="addquestion btn btn-large">Add Question</button>
+        {{#each questions}}
+          {{> editorQuestion}}
+        {{/each}}
+        {{#if questions}}
+          <button class="savecategory btn btn-large btn-primary">Save</button>
+        {{/if}}
+      {{/with}}
     </div>
-    <div>
-      <input class="categorydesc" type="text" placeholder="Category Description" value="{{longdesc}}"></input>
-    </div>
-    <button class="addquestion btn btn-large">Add Question</button>
-    {{#each questions}}
-      {{> editorQuestion}}
-    {{/each}}
-    {{#if questions}}
-      <button class="savecategory btn btn-large btn-primary">Save</button>
-    {{/if}}
-  {{/with}}
+  </div>
 </template>
 
 <template name="editorQuestion">

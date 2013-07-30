@@ -1,6 +1,28 @@
 Categories = new Meteor.Collection('categories');
 Data = new Meteor.Collection('data');
 
+Meteor.Router.add({
+  '/': 'main',
+  '/editor': 'editor',
+});
+
+Template.actionBar.isPage = function(page) {
+  return Meteor.Router.page() === page;
+}
+
+Template.actionBar.title = function() {
+  return "Quantidian";
+}
+
+Template.actionBar.subtitle = function() {
+  if (Meteor.Router.page() === "main") {
+    return "";
+  } else {
+    // TODO(enne): make this prettier.
+    return Meteor.Router.page();
+  }
+}
+
 var userLocation;
 navigator.geolocation.getCurrentPosition(function(position) {
   userLocation = position;
