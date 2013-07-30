@@ -13,8 +13,8 @@
       },
       "fries": {
         "git": "https://github.com/quisquous/meteor-fries.git",
-        "tag": "v1.0.0a",
-        "commit": "573a69d804eb682f208eee2f96baecf7bbbec45f"
+        "tag": "v1.0.0a-no_stack",
+        "commit": "dc62b3bc507d5492d5678e3bb8ba5c4765a254cf"
       },
       "page-js-ie-support": {
         "git": "https://github.com/tmeasday/meteor-page-js-ie-support.git",
