@@ -169,6 +169,7 @@ Template.editor.editor = function() {
   var editor = Session.get('editor');
   if (!editor) {
     Session.set('editor', {});
+    editor = {};
   }
 
   if (!editor.questions || !editor.questions.length) {
@@ -260,6 +261,7 @@ Template.editor.events({
     Categories.insert(editor);
 
     Session.set('editor', {});
+    Meteor.Router.to('/');
   },
 });
 
