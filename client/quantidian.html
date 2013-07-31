@@ -70,24 +70,26 @@
 
 <template name="category">
   {{#with categoryObj}}
-    <form class="form-flex inset">
+    <div class="form-flex inset">
       <p>{{longdesc}}</p>
       {{#each questions}}
         <label>{{label}}</label>
         <!-- FIXME: this should probably be JS -->
         {{#if typeIs "multiplechoice"}}
+          <div class="radiogroup">
           {{#each choices}}
-            <button class="btn focused" value="{{value}}">{{desc}}</button>
+            <button class="userinput btn radioitem" value="{{value}}">{{desc}}</button>
           {{/each}}
+          </div>
         {{/if}}
         {{#if typeIs "text"}}
-          <input class="input-text" type="text" placeholder="Enter some text"</input>
+          <input class="input-text userinput active" type="text" placeholder="Enter some text"</input>
         {{/if}}
       {{/each}}
       <div class="form-actions">
-        <button type="submit" class="btn btn-block">Save</button>
+        <button type="submit" class="btn btn-block save">Save</button>
       </div>
-    </form>
+    </div>
   {{/with}}
 </template>
 
