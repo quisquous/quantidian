@@ -94,7 +94,7 @@ Template.editor.events({
     Categories.insert(editor);
 
     Session.set('editor', {});
-    Meteor.Router.to('/');
+    Meteor.Router.to('main');
   },
 });
 

@@ -11,7 +11,7 @@ Meteor.Router.add({
   '/category/:id': function(id) {
     Session.set('category_id', id);
     return 'category';
-  }
+  },
 });
 
 Template.actionBar.isPage = function(page) {
@@ -91,7 +91,7 @@ Template.category.events({
     }
     Data.insert(data);
 
-    Meteor.Router.to('/');
+    Meteor.Router.to('main');
   },
 });
 
