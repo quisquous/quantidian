@@ -265,12 +265,15 @@ Template.editor.events({
   },
 });
 
-Template.editorQuestion.questionTypes = function() {
-  return [
-    { name: 'Multiple Choice', key: 'multiplechoice' },
-    { name: 'Text', key: 'text' },
-  ];
-};
+Template.editorQuestion.isOptional = function() {
+  var editor = Session.get('editor');
+  var num = this.num;
+  var q = _.find(editor.questions, function(q) { return q.num == num; });
+  if (!q) {
+    return;
+  }
+  return q.optional;
+}
 
 function editorUpdateField(key, value) {
   var editor = Session.get('editor');
@@ -292,10 +295,10 @@ Template.editorQuestion.events({
   'change .prompt': function(evt, template) {
     editorUpdateQuestion(template.data.num, 'label', evt.target.value);
   },
-  'change .optional': function(evt, template) {
+  'click .optional': function(evt, template) {
     editorUpdateQuestion(template.data.num, 'optional', evt.target.checked);
   },
-  'change .type': function(evt, template) {
+  'click .type': function(evt, template) {
     editorUpdateQuestion(template.data.num, 'type', evt.target.value);
   },
   'click .deletequestion': function(evt, template) {
@@ -328,22 +331,6 @@ Template.editorQuestion.events({
     editorUpdateChoice(template.data.num, choiceNumForElement(evt.target), 'value', evt.target.value);
   },
 });
-
-Template.editorQuestion.rendered = function() {
-  // This is easier to do in JavaScript than HTML.  Yuck.  :(
-
-  var type = this.data.type;
-  var typeOptionElem = $(this.firstNode).find('.type > option[value="' + type + '"]');
-  typeOptionElem.attr('selected', true);
-
-  var optional = this.data.optional;
-  var typeCheckboxElem = $(this.firstNode).find('.optional');
-  if (optional) {
-    typeCheckboxElem.attr('checked', true);
-  } else {
-    typeCheckboxElem.removeAttr('checked');
-  }
-};
 
 Template.editorQuestion.typeIs = function(type) {
   return this.type === type;

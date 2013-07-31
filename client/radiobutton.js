@@ -9,4 +9,5 @@ $(document).on('click.radiogroup', '.radioitem', function (e) {
   }
   group.find('.radioitem').removeClass('active');
   btn.addClass('active');
+  group.attr('value', btn.attr('value'));
 });

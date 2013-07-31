@@ -116,23 +116,26 @@
 </template>
 
 <template name="editorQuestion">
-  <div>
-    <a href="#" class="rightflushicon deletequestion action"><i class="icon-remove"></i></a>
-    <div class="shortlabel">
-      <label>Question {{num}}</label>
-    </div>
+  <a href="#" class="rightflushicon deletequestion action"><i class="icon-remove"></i></a>
+  <div class="shortlabel">
+    <label>Question {{num}}</label>
   </div>
   <div class="inset editorquestion">
-    Optional <input type="checkbox" class="optional"></input>
 
     <label>Question Text</label>
     <input class="input-text prompt" type="text" placeholder="Enter a prompt" value="{{label}}"></input>
 
-    <select class="type">
-      {{#each questionTypes}}
-        <option value="{{key}}">{{name}}</option>
-      {{/each}}
-    </select>
+    <div class="radiogroup optional">
+      <button class="userinput btn radioitem {{#unless isOptional}}active{{/unless}}" value="0">Required</button>
+      <button class="userinput btn radioitem {{#if isOptional}}active{{/if}}" value="1">Optional</button>
+    </div>
+
+    <label>Question Type</label>
+    <div class="radiogroup type">
+      <button class="userinput btn radioitem {{#if typeIs "multiplechoice"}}active{{/if}}" value="multiplechoice">Multiple Choice</button>
+      <button class="userinput btn radioitem {{#if typeIs "text"}}active{{/if}}" value="text">Text</button>
+    </div>
+
     {{#if typeIs "multiplechoice"}}
       {{#each choices}}
         <div class="editorchoice inset" num="{{num}}">
