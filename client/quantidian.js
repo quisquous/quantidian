@@ -1,9 +1,17 @@
 Categories = new Meteor.Collection('categories');
 Data = new Meteor.Collection('data');
 
+function currentCategory() {
+  return Categories.findOne({'_id': Session.get('category_id')});
+}
+
 Meteor.Router.add({
   '/': 'main',
   '/editor': 'editor',
+  '/category/:id': function(id) {
+    Session.set('category_id', id);
+    return 'category';
+  }
 });
 
 Template.actionBar.isPage = function(page) {
@@ -17,6 +25,9 @@ Template.actionBar.title = function() {
 Template.actionBar.subtitle = function() {
   if (Meteor.Router.page() === "main") {
     return "";
+  } else if (Meteor.Router.page() === "category") {
+    var category = currentCategory();
+    return category.name;
   } else {
     // TODO(enne): make this prettier.
     return Meteor.Router.page();
@@ -52,14 +63,15 @@ Template.category.typeIs = function(type) {
   return this.type === type;
 };
 
+Template.category.categoryObj = currentCategory;
+
 Template.category.events({
   'click .save': function(evt, template) {
     var selectedInput = template.findAll('.userinput.active');
     var values = _.map(selectedInput, function(elem) {
       return elem.value;
     });
-    var categoryId = $('.categoryTab.active')[0].getAttribute('category');
-    var category = Categories.findOne({'_id': categoryId});
+    var category = currentCategory();
     // FIXME: Make this rudimentary validation better
     if (values.length !== category.questions.length)
       return;
@@ -67,7 +79,7 @@ Template.category.events({
     var timestamp = new Date().getTime();
     var data = {
       user_id: Meteor.userId(),
-      category_id: categoryId,
+      category_id: category['_id'],
       timestamp: timestamp,
       created: timestamp,
       modified: timestamp,
@@ -79,7 +91,7 @@ Template.category.events({
     }
     Data.insert(data);
 
-    $('#categoryTabs a[href="#maintab"]').tab('show')
+    Meteor.Router.to('/');
   },
 });
 

@@ -52,7 +52,7 @@
 
 <template name="main">
   {{#each subscribed}}
-    <a href="question.html?id=#{{_id}}">
+    <a href="/category/{{_id}}">
       <button type="button" class="btn btn-block">{{name}}</button>
     </a>
   {{/each}}
@@ -69,35 +69,26 @@
 </template>
 
 <template name="category">
-  <div class="tab-pane category" id="{{_id}}">
-    {{#each questions}}
-      <label>{{label}}</label>
-      <!-- FIXME: this should probably be JS -->
-      {{#if typeIs "multiplechoice"}}
-        <div class="btn-group" data-toggle="buttons-radio">
+  {{#with categoryObj}}
+    <form class="form-flex inset">
+      <p>{{longdesc}}</p>
+      {{#each questions}}
+        <label>{{label}}</label>
+        <!-- FIXME: this should probably be JS -->
+        {{#if typeIs "multiplechoice"}}
           {{#each choices}}
-            {{> typeChoice}}
+            <button class="btn focused" value="{{value}}">{{desc}}</button>
           {{/each}}
-        </div>
-      {{/if}}
-      {{#if typeIs "text"}}
-        {{> typeText}}
-      {{/if}}
-    {{/each}}
-    <div>
-      <button class="save btn btn-large btn-primary">Save</button>
-    </div>
-  </div>
-</template>
-
-<template name="typeChoice">
-  <button class="userinput btn btn-large" value="{{value}}">{{desc}}</button>
-</template>
-
-<template name="typeText">
-  <div>
-    <input class="userinput active input-xxlarge" type="text"></input>
-  </div>
+        {{/if}}
+        {{#if typeIs "text"}}
+          <input class="input-text" type="text" placeholder="Enter some text"</input>
+        {{/if}}
+      {{/each}}
+      <div class="form-actions">
+        <button type="submit" class="btn btn-block">Save</button>
+      </div>
+    </form>
+  {{/with}}
 </template>
 
 <template name="editor">
