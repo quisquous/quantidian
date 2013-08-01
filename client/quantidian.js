@@ -1,10 +1,3 @@
-Categories = new Meteor.Collection('categories');
-Data = new Meteor.Collection('data');
-
-function currentCategory() {
-  return Categories.findOne({'_id': Session.get('category_id')});
-}
-
 Meteor.Router.add({
   '/': 'main',
   '/editor': 'editor',

@@ -1,10 +1,23 @@
 <template name="recentLogEntries">
-  <ul class="list inset">
-    <li class="list-divider">Recent logs</li>
-    {{#each recentLogs}}
-      <li class="list-item-single-line">{{stringifyLog}}</li>
-    {{/each}}
-  </ul>
+  {{#if recentLogs}}
+    <ul class="list inset">
+      <li class="list-divider">Recent logs</li>
+      {{#each recentLogs}}
+        <li class="list-item-single-line">{{stringifyLog}}</li>
+      {{/each}}
+    </ul>
+  {{/if}}
+</template>
+
+<template name="recentCategoryLogEntries">
+  {{#if recentLogs}}
+    <ul class="list inset">
+      <li class="list-divider">Recent logs from this category</li>
+      {{#each recentLogs}}
+        <li class="list-item-single-line">{{stringifyLog}}</li>
+      {{/each}}
+    </ul>
+  {{/if}}
 </template>
 
 <template name="logs">
