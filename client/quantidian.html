@@ -56,16 +56,7 @@
       <button type="button" class="btn btn-block">{{name}}</button>
     </a>
   {{/each}}
-  {{> logEntries}}
-</template>
-
-<template name="logEntries">
-  <ul class="list inset">
-    <li class="list-divider">Recent logs</li>
-      {{#each recentLogs}}
-        <li class="list-item-single-line">{{stringifyLog}}</li>
-      {{/each}}
-  </ul>
+  {{> recentLogEntries}}
 </template>
 
 <template name="category">
