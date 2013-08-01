@@ -1,8 +1,16 @@
 <template name="recentLogEntries">
   <ul class="list inset">
     <li class="list-divider">Recent logs</li>
-      {{#each recentLogs}}
-        <li class="list-item-single-line">{{stringifyLog}}</li>
-      {{/each}}
+    {{#each recentLogs}}
+      <li class="list-item-single-line">{{stringifyLog}}</li>
+    {{/each}}
+  </ul>
+</template>
+
+<template name="logs">
+  <ul class="list inset">
+    {{#each allLogs}}
+      <li class="list-item-single-line">{{stringifyLog}}</li>
+    {{/each}}
   </ul>
 </template>

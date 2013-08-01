@@ -1,5 +1,4 @@
-Template.recentLogEntries.recentLogs = function() {
-  var limit = 10;
+function getLogs(limit) {
   var logs = Data.find(
     {
       user_id: Meteor.userId(),
@@ -13,14 +12,31 @@ Template.recentLogEntries.recentLogs = function() {
   return logs;
 }
 
+Template.logs.allLogs = function() {
+  // FIXME: Add more buttons, etc.
+  return getLogs(500);
+};
+
+Template.recentLogEntries.recentLogs = function() {
+  return getLogs(5);
+};
+
 Template.recentLogEntries.stringifyLog = function() {
-  var category = categoryToString(this.category_id);
-  var value = valueToString(this.category_id, this.value);
-  var dateString = dateToString(this.created);
+  return stringifyLog(this);
+}
+
+Template.logs.stringifyLog = function() {
+  return stringifyLog(this);
+}
+
+function stringifyLog(entry) {
+  var category = categoryToString(entry.category_id);
+  var value = valueToString(entry.category_id, entry.value);
+  var dateString = dateToString(entry.created);
   if (!category || !value)
     return;
   return category + ": " + value + " (" + dateString + ")";
-}
+};
 
 function categoryToString(id) {
   var category = Categories.findOne({'_id': id});

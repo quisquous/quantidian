@@ -8,6 +8,7 @@ function currentCategory() {
 Meteor.Router.add({
   '/': 'main',
   '/editor': 'editor',
+  '/logs': 'logs',
   '/category/:id': function(id) {
     Session.set('category_id', id);
     return 'category';
@@ -29,8 +30,9 @@ Template.actionBar.subtitle = function() {
     var category = currentCategory();
     return category.name;
   } else {
-    // TODO(enne): make this prettier.
-    return Meteor.Router.page();
+    // FIXME: make this prettier.
+    var str = Meteor.Router.page();
+    return str[0].toUpperCase() + str.slice(1);
   }
 }
 
