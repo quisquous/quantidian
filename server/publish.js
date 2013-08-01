@@ -2,7 +2,7 @@
 // longdesc: String, a longer description for use when subscribin
 // type: String, a string corresponding to a Type
 // timestamp: time of creation
-// questions: Array, an array of question objects 
+// questions: Array, an array of question objects
 // TODO:
 // creator: id (from users)
 Categories = new Meteor.Collection('categories');
@@ -21,3 +21,22 @@ Categories = new Meteor.Collection('categories');
 // For multiple choice and text types:
 // value: String, representing whatever the value was.
 Data = new Meteor.Collection('data');
+
+Meteor.publish("userData", function() {
+  return Meteor.users.find(
+    {_id: this.userId},
+    {fields: {'subscriptions': 1}}
+  );
+});
+
+// FIXME: only certain fields
+Meteor.users.allow({
+  update: function(userId, user, fields, modifier) {
+    if (user._id === userId) {
+      Meteor.users.update({_id: userId}, modifier);
+      return true;
+    } else {
+      return false;
+    }
+  },
+});

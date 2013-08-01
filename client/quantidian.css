@@ -6,3 +6,7 @@
 .shortlabel {
   padding-right: 32px;
 }
+
+.inlinelist {
+  float: left;
+}

@@ -2,6 +2,7 @@ Meteor.Router.add({
   '/': 'main',
   '/editor': 'editor',
   '/logs': 'logs',
+  '/subscribe': 'subscribe',
   '/category/:id': function(id) {
     Session.set('category_id', id);
     return 'category';
@@ -34,16 +35,11 @@ navigator.geolocation.getCurrentPosition(function(position) {
   userLocation = position;
 });
 
-function pluckId(cursor) {
-  return cursor.map(function(item) { return item._id; });
-}
-
 function subscribedCategoryIds() {
   // FIXME: Need to add a user here and find the categories they care about.
-  var test = Categories.find({name: {$in: ['test1', 'test2', 'test3']}});
   var userCreated = Categories.find({creator: Meteor.userId()});
 
-  return pluckId(test).concat(pluckId(userCreated));
+  return pluckId(defaultCategories()).concat(pluckId(userCreated));
 }
 
 function subscribedCategories() {

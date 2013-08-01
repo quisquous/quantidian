@@ -1,0 +1,30 @@
+<template name="subscribe">
+  <ul class="list inset">
+    <li class="list-divider">Subscriptions</li>
+    {{#each categoryList}}
+      <li class="list-item-two-lines">
+        <span class="inlinelist">
+          <!-- FIXME: Don't show up arrow on top item -->
+          <a href="#" class="uparrow action"><i class="icon-chevron-up"></i></a>
+        </span>
+        <span class="inlinelist">
+          <a href="#" class="downarrow action"><i class="icon-chevron-down"></i></a>
+        </span>
+        <span class="inlinelist">
+          {{#with category}}
+            <h3>{{name}}</h3>
+            <p>{{longdesc}}</p>
+          {{/with}}
+        </span>
+        <span class="pull-right">
+          {{#if enable}}
+            <a href="#" class="unsubscribe action"><i class="icon-accept"></i></a>
+          {{else}}
+            <a href="#" class="subscribe action"><i class="icon-remove"></i></a>
+          {{/if}}
+        </span>
+      </li>
+    {{/each}}
+    <li></li>
+  </ul>
+</template>
