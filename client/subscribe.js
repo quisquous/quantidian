@@ -5,7 +5,6 @@ function userCreatedCategories() {
 Template.subscribe.categoryList = function() {
   // FIXME: lazy subscription list initialization shouldn't happen here.
   if (!Meteor.user().subscriptions) {
-    console.log("lazy init");
     var subs = defaultCategories().map(
       function(item) {
         return {
@@ -37,7 +36,6 @@ Template.subscribe.categoryList = function() {
   });
 
   if (update_user) {
-    console.log("missing subs");
     Meteor.users.update(Meteor.userId(), {$set: {subscriptions: subs}});
   }
 
@@ -83,26 +81,21 @@ function reorderSubscription(sub_id, dir) {
   var temp = subs[indexOf + dir];
   subs[indexOf + dir] = subs[indexOf];
   subs[indexOf] = temp;
-  console.log(subs);
 
   Meteor.users.update(Meteor.userId(), {$set: {subscriptions: subs}});
 }
 
 Template.subscribe.events({
   'click .uparrow': function(evt) {
-    console.log('up', this.category._id);
     reorderSubscription(this.category._id, -1);
   },
   'click .downarrow': function(evt) {
-    console.log('down', this.category._id);
     reorderSubscription(this.category._id, 1);
   },
   'click .subscribe': function(evt) {
-    console.log('subscribe', this.category._id);
     setSubscriptionEnabled(this.category._id, true);
   },
   'click .unsubscribe': function(evt) {
-    console.log('unsubscribe', this.category._id);
     setSubscriptionEnabled(this.category._id, false);
   },
 });
