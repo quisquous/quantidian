@@ -35,17 +35,15 @@ navigator.geolocation.getCurrentPosition(function(position) {
   userLocation = position;
 });
 
-function subscribedCategoryIds() {
-  // FIXME: Need to add a user here and find the categories they care about.
-  var userCreated = Categories.find({creator: Meteor.userId()});
-
-  return pluckId(defaultCategories()).concat(pluckId(userCreated));
-}
-
 function subscribedCategories() {
-  // FIXME: subscribedCategories is an ordered list.  Need to respect that
-  // order through the map here.
-  return Categories.find({'_id': {$in: subscribedCategoryIds()}}).fetch();
+  var subs = Meteor.user().subscriptions;
+  var categories = [];
+  _.each(subs, function(sub) {
+    if (sub.enable) {
+      categories.push(Categories.findOne({'_id': sub._id}));
+    }
+  });
+  return categories;
 }
 
 Template.main.subscribed = subscribedCategories;

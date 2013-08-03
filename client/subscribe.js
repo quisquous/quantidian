@@ -39,7 +39,6 @@ Template.subscribe.categoryList = function() {
     Meteor.users.update(Meteor.userId(), {$set: {subscriptions: subs}});
   }
 
-  // FIXME: need to order this by sub_id
   var data =_.map(subs, function(item) {
     return {
       category: function(sub_id) {
