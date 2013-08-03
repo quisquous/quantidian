@@ -1,6 +1,6 @@
 # Quantidian
 
-Quantidian is a personal data-collection app for your everyday data.
+Quantidian is a personal data collection app for your everyday data.
 
 
 ## Why?
@@ -8,7 +8,7 @@ Quantidian is a personal data-collection app for your everyday data.
 Despite the prevalance of many automatic and implicit data-gathering devices, there is still a boatload of categories of personal data that can only really be gathered by via manual entry.
 Examples of these sources of data are mood, caffeine and alcohol consumption, or subjective health (like headaches or pain).
 
-Quantidian aims to reduce the friction for entering these kinds of everyday data as well as providing an affordance for timely data entry when not in front of a computer.
+Quantidian aims to reduce the friction of entering such kinds of everyday data, as well as providing an affordance for timely data entry via mobile browser when not in front of a computer.
 
 
 ## Primary Goals
@@ -26,6 +26,6 @@ Quantidian aims to reduce the friction for entering these kinds of everyday data
 
 * "Social" (all data is only accessible by you)
 
-* Analysis and visualization (this is just a data logging service)
+* Analysis and visualization (this is just data logging software)
 
-* Service (run your own server: this is software, not a service)
+* Service (deploy your own server: this is software, not a service)
