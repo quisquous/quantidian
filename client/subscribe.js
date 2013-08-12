@@ -7,20 +7,7 @@ function defaultCategories() {
 }
 
 Template.subscribe.categoryList = function() {
-  // FIXME: lazy subscription list initialization shouldn't happen here.
-  if (!Meteor.user().subscriptions) {
-    var subs = defaultCategories().map(
-      function(item) {
-        return {
-          _id: item._id,
-          enable: true,
-        };
-      }
-    );
-    Meteor.users.update(Meteor.userId(), {$set: {subscriptions: subs}});
-  } else {
-    var subs = Meteor.user().subscriptions;
-  }
+  var subs = Meteor.user().subscriptions;
 
   // Make sure the user is subscribed to anything they've created.
   // FIXME: this should be an error and creating a category should do this
