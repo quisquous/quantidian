@@ -4,6 +4,7 @@ Meteor.startup(function() {
       name: 'test1',
       longdesc: 'Just a test description.',
       timestamp: new Date().getTime(),
+      default_category: true,
       questions: [
         {
           label: "This is a test prompt",
@@ -28,6 +29,7 @@ Meteor.startup(function() {
       name: 'test2',
       longdesc: 'Letter and text.',
       timestamp: new Date().getTime(),
+      default_category: true,
       questions: [
         {
           label: 'Some text',
@@ -51,6 +53,7 @@ Meteor.startup(function() {
       name: 'test3',
       longdesc: 'Test description 3',
       timestamp: new Date().getTime(),
+      default_category: true,
       questions: [
         {
           label: 'Make a note.',

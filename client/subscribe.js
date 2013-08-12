@@ -2,6 +2,10 @@ function userCreatedCategories() {
   return Categories.find({creator: Meteor.userId()}).fetch();
 }
 
+function defaultCategories() {
+  return Categories.find({default_category: true});
+}
+
 Template.subscribe.categoryList = function() {
   // FIXME: lazy subscription list initialization shouldn't happen here.
   if (!Meteor.user().subscriptions) {

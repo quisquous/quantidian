@@ -6,10 +6,10 @@ function apiLogs(user) {
 }
 
 function apiCategories(user) {
-  // FIXME: add test categories here
   // FIXME: obey limit and skip
+  var defaults = Categories.find({default_category: true}).fetch();
   var results = Categories.find({creator: user._id}).fetch();
-  return [200, JSON.stringify(results)];
+  return [200, JSON.stringify(defaults.concat(results))];
 }
 
 var entries = [

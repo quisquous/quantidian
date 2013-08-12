@@ -43,6 +43,8 @@ function subscribedCategories() {
       categories.push(Categories.findOne({'_id': sub._id}));
     }
   });
+  // FIXME: validate that the user can see these categories, i.e. they are
+  // default or user-created
   return categories;
 }
 
