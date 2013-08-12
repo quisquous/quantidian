@@ -8,28 +8,6 @@ function defaultCategories() {
 
 Template.subscribe.categoryList = function() {
   var subs = Meteor.user().subscriptions;
-
-  // Make sure the user is subscribed to anything they've created.
-  // FIXME: this should be an error and creating a category should do this
-  // Or maybe the server could do it.
-  var sub_ids = _.map(subs, function(sub) { return sub._id; });
-  var update_user = false;
-
-  _.each(userCreatedCategories(), function(item) {
-    if (_.contains(sub_ids, item._id))
-      return;
-    update_user = true;
-    sub_ids.push(item._id);
-    subs.push({
-      _id: item._id,
-      enable: true,
-    });
-  });
-
-  if (update_user) {
-    Meteor.users.update(Meteor.userId(), {$set: {subscriptions: subs}});
-  }
-
   var data =_.map(subs, function(item) {
     return {
       category: function(sub_id) {

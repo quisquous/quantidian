@@ -91,7 +91,13 @@ Template.editor.events({
 
     editor.creator = Meteor.userId();
     editor.timestamp = new Date().getTime();
-    Categories.insert(editor);
+    var newId = Categories.insert(editor);
+    var newSub = {
+      _id: newId,
+      enable: true,
+    };
+    // FIXME: This adds the new sub twice!
+    Meteor.users.update(Meteor.userId(), {$push: {subscriptions: newSub}});
 
     Session.set('editor', {});
     Meteor.Router.to('main');
