@@ -96,7 +96,6 @@ Template.editor.events({
       _id: newId,
       enable: true,
     };
-    // FIXME: This adds the new sub twice!
     Meteor.users.update(Meteor.userId(), {$push: {subscriptions: newSub}});
 
     Session.set('editor', {});

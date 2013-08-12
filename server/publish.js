@@ -33,7 +33,6 @@ Meteor.publish("userData", function() {
 Meteor.users.allow({
   update: function(userId, user, fields, modifier) {
     if (user._id === userId) {
-      Meteor.users.update({_id: userId}, modifier);
       return true;
     } else {
       return false;
