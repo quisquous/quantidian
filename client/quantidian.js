@@ -3,6 +3,7 @@ Meteor.Router.add({
   '/editor': 'editor',
   '/logs': 'logs',
   '/subscribe': 'subscribe',
+  '/settings': 'settings',
   '/category/:id': function(id) {
     Session.set('category_id', id);
     return 'category';

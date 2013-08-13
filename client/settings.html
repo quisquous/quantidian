@@ -1,0 +1,13 @@
+<template name="settings">
+  <ul class="list inset">
+    <li class="list-divider">Information</li>
+    {{#each settingsItems}}
+      <li class="list-item-two-lines">
+        <span class="inlinelist">
+          <h3>{{title}}</h3>
+          <p>{{text}}</p>
+        </span>
+      </li>
+    {{/each}}
+  </ul>
+</template>
