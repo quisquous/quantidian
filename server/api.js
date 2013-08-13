@@ -127,7 +127,10 @@ function validate(entry, params) {
 
 function authenticate(entry, params) {
   var user = Meteor.users.findOne(params.user);
-  // FIXME: check apikey
+  if (!user)
+    return undefined;
+  if (params.apikey !== user.apikey)
+    return undefined;
   return user;
 }
 

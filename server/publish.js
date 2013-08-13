@@ -25,17 +25,20 @@ Data = new Meteor.Collection('data');
 Meteor.publish("userData", function() {
   return Meteor.users.find(
     {_id: this.userId},
-    {fields: {'subscriptions': 1}}
+    {fields: {'subscriptions': 1, 'apikey': 1}}
   );
 });
 
-// FIXME: only certain fields
 Meteor.users.allow({
   update: function(userId, user, fields, modifier) {
-    if (user._id === userId) {
-      return true;
-    } else {
+    if (user._id !== userId) {
       return false;
     }
+
+    var foundBad = _.some(fields, function(fieldName) {
+      return fieldName !== 'subscriptions';
+    });
+
+    return !foundBad;
   },
 });

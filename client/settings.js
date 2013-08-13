@@ -8,6 +8,10 @@ Template.settings.settingsItems = function() {
       title: 'User ID',
       text: Meteor.userId(),
     },
+    {
+      title: 'API Key',
+      text: Meteor.user().apikey,
+    },
   ];
   return items;
 };
