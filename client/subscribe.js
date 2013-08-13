@@ -8,7 +8,7 @@ function defaultCategories() {
 
 Template.subscribe.categoryList = function() {
   var subs = Meteor.user().subscriptions;
-  var data =_.map(subs, function(item) {
+  var data = _.map(subs, function(item) {
     return {
       category: function(sub_id) {
         return Categories.findOne({'_id': sub_id});
@@ -16,11 +16,20 @@ Template.subscribe.categoryList = function() {
       enable: item.enable,
     };
   });
-  return data;
+  return _.filter(data, function(item) {
+    return item.category;
+  });
 };
 
-function setSubscriptionEnabled(sub_id, enabled) {
+function validSubscriptions() {
   var subs = Meteor.user().subscriptions;
+  return _.filter(subs, function(item) {
+    return Categories.findOne({'_id': item._id});
+  });
+}
+
+function setSubscriptionEnabled(sub_id, enabled) {
+  var subs = validSubscriptions();
   var item = _.find(subs, function(item) {
     return item._id === sub_id;
   });
@@ -31,7 +40,7 @@ function setSubscriptionEnabled(sub_id, enabled) {
 }
 
 function reorderSubscription(sub_id, dir) {
-  var subs = Meteor.user().subscriptions;
+  var subs = validSubscriptions();
   var indexOf = -1;
   for (var i = 0; i < subs.length; ++i) {
     if (subs[i]._id === sub_id) {
