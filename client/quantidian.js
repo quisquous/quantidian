@@ -25,7 +25,6 @@ Template.actionBar.subtitle = function() {
     var category = currentCategory();
     return category.name;
   } else {
-    // FIXME: make this prettier.
     var str = Meteor.Router.page();
     return str[0].toUpperCase() + str.slice(1);
   }
@@ -41,15 +40,13 @@ function subscribedCategories() {
   var categories = [];
   _.each(subs, function(sub) {
     if (sub.enable) {
-      // FIXME: clean up bogus categories from subscriptions somewhere
+      // Bogus categories are just silently ignored here and cleaned elsewhere.
       var category = Categories.findOne({'_id': sub._id});
       if (category) {
         categories.push(category);
       }
     }
   });
-  // FIXME: validate that the user can see these categories, i.e. they are
-  // default or user-created
   return categories;
 }
 
