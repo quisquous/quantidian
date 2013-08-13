@@ -1,15 +1,27 @@
-function apiLogs(user) {
-  // FIXME: obey limit and skip
+function apiLogs(user, params) {
   // FIXME: filter out user_id
-  var results = Data.find({user_id: user._id}).fetch();
+  var results = Data.find({
+    user_id: user._id,
+  }, {
+    skip: params.skip,
+    limit: params.limit,
+    sort: { timestamp: 1 },
+  }).fetch();
   return [200, JSON.stringify(results)];
 }
 
-function apiCategories(user) {
-  // FIXME: obey limit and skip
-  var defaults = Categories.find({default_category: true}).fetch();
-  var results = Categories.find({creator: user._id}).fetch();
-  return [200, JSON.stringify(defaults.concat(results))];
+function apiCategories(user, params) {
+  var results = Categories.find({
+    $or: [
+      { default_category: true},
+      { creator: user._id },
+    ],
+  }, {
+    skip: params.skip,
+    limit: params.limit,
+    sort: { timestamp: 1 },
+  }).fetch();
+  return [200, JSON.stringify(results)];
 }
 
 var entries = [
@@ -101,8 +113,12 @@ function validate(entry, params) {
   });
 
   _.each(validKeys, function(key) {
-    if (entry.inputs[key].required && !_.contains(paramKeys, key)) {
+    if (_.contains(paramKeys, key))
+      return;
+    if (entry.inputs[key].required) {
       error = [400, 'Missing required key: ' + key];
+    } else if ('default' in entry.inputs[key]) {
+      params[key] = entry.inputs[key].default;
     }
   });
 
@@ -133,7 +149,7 @@ _.each(entries, function(entry) {
       return [403, 'Invalid user and/or apikey specified']
     }
 
-    return entry.func(user);
+    return entry.func(user, params);
   });
 });
 
