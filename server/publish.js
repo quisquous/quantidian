@@ -8,6 +8,8 @@ function checkFields(doc, required, optional) {
   return !missingRequired && !unknownField;
 }
 
+// *** Category collection
+
 var requiredCategoryFields = [
   '_id',
   // String, a short-hand name for the category, e.g. "mood" or "beer"
@@ -22,6 +24,9 @@ var requiredCategoryFields = [
   'owner',
 ];
 
+// Other category fields:
+// default_category: boolean, can't be specified by user
+
 Categories = new Meteor.Collection('categories');
 
 Categories.allow({
@@ -32,6 +37,16 @@ Categories.allow({
     return doc.owner === userId;
   },
 });
+
+Meteor.publish("defaultCategories", function() {
+  return Categories.find({default_category: true});
+});
+
+Meteor.publish("ownCategories", function() {
+  return Categories.find({owner: this.userId});
+});
+
+// *** Data collection
 
 var requiredDataFields = [
   '_id',
@@ -46,7 +61,7 @@ var requiredDataFields = [
 
 var optionalDataFields = [
   // optional Dictionary, contains all the fields in the coordinates interface
-  // in the W3C Geolocation API spec:
+  // in the W3C Geolocation API spec.  Missing fields are null.
   // http://dev.w3.org/geo/api/spec-source.html#coordinates_interface
   'location',
 ];
@@ -62,12 +77,11 @@ Data.allow({
   },
 });
 
-Meteor.publish("userData", function() {
-  return Meteor.users.find(
-    {_id: this.userId},
-    {fields: {'subscriptions': 1, 'apikey': 1}}
-  );
+Meteor.publish("ownData", function() {
+  return Data.find({owner: this.userId});
 });
+
+// *** User collection
 
 Meteor.users.allow({
   update: function(userId, user, fields, modifier) {
@@ -85,3 +99,11 @@ Meteor.users.allow({
     return !foundBad;
   },
 });
+
+Meteor.publish("ownUser", function() {
+  return Meteor.users.find(
+    {_id: this.userId},
+    {fields: {'subscriptions': 1, 'apikey': 1}}
+  );
+});
+
