@@ -77,7 +77,10 @@ Template.category.events({
       value: values,
     };
     if (userLocation) {
-      data.location = userLocation.coords;
+      var coords = userLocation.coords;
+      data.location = _.pick(coords, _.filter(_.keys(coords), function(key) {
+        return coords[key] !== null;
+      }));
     }
     Data.insert(data);
 
