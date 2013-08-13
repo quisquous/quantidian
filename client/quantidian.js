@@ -70,12 +70,9 @@ Template.category.events({
 
     var timestamp = new Date().getTime();
     var data = {
-      user_id: Meteor.userId(),
+      owner: Meteor.userId(),
       category_id: category['_id'],
       timestamp: timestamp,
-      created: timestamp,
-      modified: timestamp,
-      deleted: false,
       value: values,
     };
     if (userLocation) {

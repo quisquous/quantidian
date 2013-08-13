@@ -1,5 +1,5 @@
 function userCreatedCategories() {
-  return Categories.find({creator: Meteor.userId()}).fetch();
+  return Categories.find({owner: Meteor.userId()}).fetch();
 }
 
 function defaultCategories() {

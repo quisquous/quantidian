@@ -1,7 +1,7 @@
 function apiLogs(user, params) {
   // FIXME: filter out user_id
   var results = Data.find({
-    user_id: user._id,
+    owner: user._id,
   }, {
     skip: params.skip,
     limit: params.limit,
@@ -14,7 +14,7 @@ function apiCategories(user, params) {
   var results = Categories.find({
     $or: [
       { default_category: true},
-      { creator: user._id },
+      { owner: user._id },
     ],
   }, {
     skip: params.skip,

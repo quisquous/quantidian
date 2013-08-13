@@ -89,7 +89,7 @@ Template.editor.events({
     _.each(editor.questions, function(q) { delete q.num; });
     _.each(editor.questions.choices, function(c) { delete c.num; });
 
-    editor.creator = Meteor.userId();
+    editor.owner = Meteor.userId();
     editor.timestamp = new Date().getTime();
     var newId = Categories.insert(editor);
     var newSub = {

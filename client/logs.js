@@ -1,7 +1,6 @@
 function getLogs(limit, category_id) {
   var query = {
-    user_id: Meteor.userId(),
-    deleted: false
+    owner: Meteor.userId(),
   };
   if (category_id) {
     query.category_id = category_id;
@@ -9,7 +8,7 @@ function getLogs(limit, category_id) {
   var logs = Data.find(
     query,
     {
-      sort: {created: -1},
+      sort: {timestamp: -1},
       limit: limit,
     }
   ).fetch();
@@ -45,7 +44,7 @@ Template.recentCategoryLogEntries.stringifyLog = function() {
 function stringifyLog(entry) {
   var category = categoryToString(entry.category_id);
   var value = valueToString(entry.category_id, entry.value);
-  var dateString = dateToString(entry.created);
+  var dateString = dateToString(entry.timestamp);
   if (!category || !value)
     return;
   return category + ": " + value + " (" + dateString + ")";
