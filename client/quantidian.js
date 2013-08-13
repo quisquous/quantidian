@@ -41,7 +41,11 @@ function subscribedCategories() {
   var categories = [];
   _.each(subs, function(sub) {
     if (sub.enable) {
-      categories.push(Categories.findOne({'_id': sub._id}));
+      // FIXME: clean up bogus categories from subscriptions somewhere
+      var category = Categories.findOne({'_id': sub._id});
+      if (category) {
+        categories.push(category);
+      }
     }
   });
   // FIXME: validate that the user can see these categories, i.e. they are

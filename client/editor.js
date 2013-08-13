@@ -82,7 +82,8 @@ Template.editor.events({
   },
   'click .savecategory': function(evt, template) {
     // FIXME: make sure required fields are filled in blah blah blah
-    // FIXME: probably should validate this too
+    // FIXME: should definitely validate this, as missing required fields
+    // causes insertion to fail
     var editor = Session.get('editor');
 
     // Delete editor-only fields.
