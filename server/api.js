@@ -41,13 +41,13 @@ var entries = [
       skip: {
         required: false,
         type: 'int',
-        default: 0,
+        default_value: 0,
         min: 0,
       },
       limit: {
         required: false,
         type: 'int',
-        default: 200,
+        default_value: 200,
         min: 1,
         max: 200,
       },
@@ -69,13 +69,13 @@ var entries = [
       skip: {
         required: false,
         type: 'int',
-        default: 0,
+        default_value: 0,
         min: 0,
       },
       limit: {
         required: false,
         type: 'int',
-        default: 200,
+        default_value: 200,
         min: 1,
         max: 200,
       },
@@ -117,8 +117,8 @@ function validate(entry, params) {
       return;
     if (entry.inputs[key].required) {
       error = [400, 'Missing required key: ' + key];
-    } else if ('default' in entry.inputs[key]) {
-      params[key] = entry.inputs[key].default;
+    } else if ('default_value' in entry.inputs[key]) {
+      params[key] = entry.inputs[key].default_value;
     }
   });
 
