@@ -21,7 +21,7 @@ var requiredCategoryFields = [
   // Array, an array of question objects
   'questions',
   // id, refers to _id from the Users collection.
-  'owner',
+  'owner'
 ];
 
 // Other category fields:
@@ -35,15 +35,19 @@ Categories.allow({
       return false;
     }
     return doc.owner === userId;
-  },
+  }
 });
 
-Meteor.publish("defaultCategories", function() {
-  return Categories.find({default_category: true});
+Meteor.publish('defaultCategories', function() {
+  return Categories.find({
+    default_category: true
+  });
 });
 
-Meteor.publish("ownCategories", function() {
-  return Categories.find({owner: this.userId});
+Meteor.publish('ownCategories', function() {
+  return Categories.find({
+    owner: this.userId
+  });
 });
 
 // *** Data collection
@@ -56,14 +60,14 @@ var requiredDataFields = [
   'category_id',
   // unix timestamp, the timestamp this log represents
   'timestamp',
-  'value',
+  'value'
 ];
 
 var optionalDataFields = [
   // optional Dictionary, contains all the fields in the coordinates interface
   // in the W3C Geolocation API spec.  Missing fields are null.
   // http://dev.w3.org/geo/api/spec-source.html#coordinates_interface
-  'location',
+  'location'
 ];
 
 Data = new Meteor.Collection('data');
@@ -74,11 +78,13 @@ Data.allow({
       return false;
     }
     return doc.owner === userId;
-  },
+  }
 });
 
-Meteor.publish("ownData", function() {
-  return Data.find({owner: this.userId});
+Meteor.publish('ownData', function() {
+  return Data.find({
+    owner: this.userId
+  });
 });
 
 // *** User collection
@@ -97,13 +103,16 @@ Meteor.users.allow({
     // happen if insertion fails on the server end.
 
     return !foundBad;
-  },
+  }
 });
 
-Meteor.publish("ownUser", function() {
-  return Meteor.users.find(
-    {_id: this.userId},
-    {fields: {'subscriptions': 1, 'apikey': 1}}
-  );
+Meteor.publish('ownUser', function() {
+  return Meteor.users.find({
+    _id: this.userId
+  }, {
+    fields: {
+      'subscriptions': 1,
+      'apikey': 1
+    }
+  });
 });
-

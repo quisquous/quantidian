@@ -1,9 +1,13 @@
 function userCreatedCategories() {
-  return Categories.find({owner: Meteor.userId()}).fetch();
+  return Categories.find({
+    owner: Meteor.userId()
+  }).fetch();
 }
 
 function defaultCategories() {
-  return Categories.find({default_category: true});
+  return Categories.find({
+    default_category: true
+  });
 }
 
 Template.subscribe.categoryList = function() {
@@ -11,9 +15,11 @@ Template.subscribe.categoryList = function() {
   var data = _.map(subs, function(item) {
     return {
       category: function(sub_id) {
-        return Categories.findOne({'_id': sub_id});
+        return Categories.findOne({
+          '_id': sub_id
+        });
       }(item._id),
-      enable: item.enable,
+      enable: item.enable
     };
   });
   return _.filter(data, function(item) {
@@ -24,7 +30,9 @@ Template.subscribe.categoryList = function() {
 function validSubscriptions() {
   var subs = Meteor.user().subscriptions;
   return _.filter(subs, function(item) {
-    return Categories.findOne({'_id': item._id});
+    return Categories.findOne({
+      '_id': item._id
+    });
   });
 }
 
@@ -35,7 +43,11 @@ function setSubscriptionEnabled(sub_id, enabled) {
   });
   if (item) {
     item.enable = enabled;
-    Meteor.users.update(Meteor.userId(), {$set: {subscriptions: subs}});
+    Meteor.users.update(Meteor.userId(), {
+      $set: {
+        subscriptions: subs
+      }
+    });
   }
 }
 
@@ -59,7 +71,11 @@ function reorderSubscription(sub_id, dir) {
   subs[indexOf + dir] = subs[indexOf];
   subs[indexOf] = temp;
 
-  Meteor.users.update(Meteor.userId(), {$set: {subscriptions: subs}});
+  Meteor.users.update(Meteor.userId(), {
+    $set: {
+      subscriptions: subs
+    }
+  });
 }
 
 Template.subscribe.events({
@@ -74,5 +90,5 @@ Template.subscribe.events({
   },
   'click .unsubscribe': function(evt) {
     setSubscriptionEnabled(this.category._id, false);
-  },
+  }
 });

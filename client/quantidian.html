@@ -1,5 +1,5 @@
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 </head>
 
 <body>
@@ -75,9 +75,9 @@
         <label>{{label}}</label>
         {{#if typeIs "multiplechoice"}}
           <div class="radiogroup">
-          {{#each choices}}
-            <button class="userinput btn radioitem" value="{{value}}">{{desc}}</button>
-          {{/each}}
+            {{#each choices}}
+              <button class="userinput btn radioitem" value="{{value}}">{{desc}}</button>
+            {{/each}}
           </div>
         {{/if}}
         {{#if typeIs "text"}}

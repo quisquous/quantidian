@@ -1,15 +1,16 @@
 function getLogs(limit, category_id) {
   var query = {
-    owner: Meteor.userId(),
+    owner: Meteor.userId()
   };
   if (category_id) {
     query.category_id = category_id;
   }
   var logs = Data.find(
-    query,
-    {
-      sort: {timestamp: -1},
-      limit: limit,
+    query, {
+      sort: {
+        timestamp: -1
+      },
+      limit: limit
     }
   ).fetch();
   return logs;
@@ -47,26 +48,30 @@ function stringifyLog(entry) {
   var dateString = dateToString(entry.timestamp);
   if (!category || !value)
     return;
-  return category + ": " + value + " (" + dateString + ")";
-};
+  return category + ': ' + value + ' (' + dateString + ')';
+}
 
 function categoryToString(id) {
-  var category = Categories.findOne({'_id': id});
+  var category = Categories.findOne({
+    '_id': id
+  });
   if (!category)
-    return "";
+    return '';
   return category.name;
 }
 
 function valueToString(category_id, values) {
-  var category = Categories.findOne({'_id': category_id});
+  var category = Categories.findOne({
+    '_id': category_id
+  });
   if (!category)
-    return "";
-  var valueString = "";
+    return '';
+  var valueString = '';
   // FIXME: sanity check values vs. category questions length
   for (var i = 0; i < values.length; ++i) {
     var question = category.questions[i];
     var thisValue = undefined;
-    if (question.type === "multiplechoice") {
+    if (question.type === 'multiplechoice') {
       var searchValue = values[i];
       var choice = _.find(question.choices, function(choice) {
         // FIXME: stored values are strings here, so using == :(
@@ -75,16 +80,16 @@ function valueToString(category_id, values) {
       if (choice) {
         thisValue = choice.desc;
       }
-    } else if (question.type == "text") {
+    } else if (question.type == 'text') {
       thisValue = values[i];
     } else {
-      thisValue = "???";
+      thisValue = '???';
     }
 
-    if (valueString === "") {
+    if (valueString === '') {
       valueString = thisValue;
     } else {
-      valueString += " / " + thisValue;
+      valueString += ' / ' + thisValue;
     }
   }
   return valueString;
@@ -93,5 +98,5 @@ function valueToString(category_id, values) {
 function dateToString(timestamp) {
   // FIXME: Do something smarter here like "5 minutes ago"
   var date = new Date(timestamp);
-  return date.toDateString() + " " + date.toTimeString();
+  return date.toDateString() + ' ' + date.toTimeString();
 }

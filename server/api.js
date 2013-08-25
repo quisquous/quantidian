@@ -1,87 +1,89 @@
 function apiLogs(user, params) {
   // FIXME: filter out user_id
   var results = Data.find({
-    owner: user._id,
+    owner: user._id
   }, {
     skip: params.skip,
     limit: params.limit,
-    sort: { timestamp: 1 },
+    sort: {
+      timestamp: 1
+    }
   }).fetch();
   return [200, JSON.stringify(results)];
 }
 
 function apiCategories(user, params) {
   var results = Categories.find({
-    $or: [
-      { default_category: true},
-      { owner: user._id },
-    ],
+    $or: [{
+      default_category: true
+    }, {
+      owner: user._id
+    }]
   }, {
     skip: params.skip,
     limit: params.limit,
-    sort: { timestamp: 1 },
+    sort: {
+      timestamp: 1
+    }
   }).fetch();
   return [200, JSON.stringify(results)];
 }
 
-var entries = [
-  {
-    url: 'logs',
-    type: 'POST',
-    func: apiLogs,
-    inputs: {
-      user: {
-        required: true,
-        type: 'str',
-      },
-      apikey: {
-        required: true,
-        type: 'str',
-      },
-      skip: {
-        required: false,
-        type: 'int',
-        default_value: 0,
-        min: 0,
-      },
-      limit: {
-        required: false,
-        type: 'int',
-        default_value: 200,
-        min: 1,
-        max: 200,
-      },
+var entries = [{
+  url: 'logs',
+  type: 'POST',
+  func: apiLogs,
+  inputs: {
+    user: {
+      required: true,
+      type: 'str'
     },
-  },
-  {
-    url: 'categories',
-    type: 'POST',
-    func: apiCategories,
-    inputs: {
-      user: {
-        required: true,
-        type: 'str',
-      },
-      apikey: {
-        required: true,
-        type: 'str',
-      },
-      skip: {
-        required: false,
-        type: 'int',
-        default_value: 0,
-        min: 0,
-      },
-      limit: {
-        required: false,
-        type: 'int',
-        default_value: 200,
-        min: 1,
-        max: 200,
-      },
+    apikey: {
+      required: true,
+      type: 'str'
     },
-  },
-];
+    skip: {
+      required: false,
+      type: 'int',
+      default_value: 0,
+      min: 0
+    },
+    limit: {
+      required: false,
+      type: 'int',
+      default_value: 200,
+      min: 1,
+      max: 200
+    }
+  }
+}, {
+  url: 'categories',
+  type: 'POST',
+  func: apiCategories,
+  inputs: {
+    user: {
+      required: true,
+      type: 'str'
+    },
+    apikey: {
+      required: true,
+      type: 'str'
+    },
+    skip: {
+      required: false,
+      type: 'int',
+      default_value: 0,
+      min: 0
+    },
+    limit: {
+      required: false,
+      type: 'int',
+      default_value: 200,
+      min: 1,
+      max: 200
+    }
+  }
+}];
 
 function validate(entry, params) {
   var paramKeys = _.keys(params);
@@ -104,10 +106,10 @@ function validate(entry, params) {
         return;
       }
       if ('min' in paramInfo && intValue < paramInfo.min) {
-        error = [400, 'Min value exceeded for key: ' + key]
+        error = [400, 'Min value exceeded for key: ' + key];
       }
       if ('max' in paramInfo && intValue > paramInfo.max) {
-        error = [400, 'Max value exceeded for key: ' + key]
+        error = [400, 'Max value exceeded for key: ' + key];
       }
     }
   });
@@ -149,11 +151,11 @@ _.each(entries, function(entry) {
 
     var user = authenticate(entry, params);
     if (!user) {
-      return [403, 'Invalid user and/or apikey specified']
+      return [403, 'Invalid user and/or apikey specified'];
     }
 
     return entry.func(user, params);
   });
 });
 
-Meteor.Router.add('/api/*', [404, "Unknown API entry"]);
+Meteor.Router.add('/api/*', [404, 'Unknown API entry']);

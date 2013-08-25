@@ -12,5 +12,7 @@ currentCategoryId = function() {
 };
 
 currentCategory = function() {
-  return Categories.findOne({'_id': currentCategoryId()});
+  return Categories.findOne({
+    '_id': currentCategoryId()
+  });
 };

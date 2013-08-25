@@ -7,28 +7,28 @@ Meteor.Router.add({
   '/category/:id': function(id) {
     Session.set('category_id', id);
     return 'category';
-  },
+  }
 });
 
 Template.actionBar.isPage = function(page) {
   return Meteor.Router.page() === page;
-}
+};
 
 Template.actionBar.title = function() {
-  return "Quantidian";
-}
+  return 'Quantidian';
+};
 
 Template.actionBar.subtitle = function() {
-  if (Meteor.Router.page() === "main") {
-    return "";
-  } else if (Meteor.Router.page() === "category") {
+  if (Meteor.Router.page() === 'main') {
+    return '';
+  } else if (Meteor.Router.page() === 'category') {
     var category = currentCategory();
     return category.name;
   } else {
     var str = Meteor.Router.page();
     return str[0].toUpperCase() + str.slice(1);
   }
-}
+};
 
 var userLocation;
 navigator.geolocation.getCurrentPosition(function(position) {
@@ -41,7 +41,9 @@ function subscribedCategories() {
   _.each(subs, function(sub) {
     if (sub.enable) {
       // Bogus categories are just silently ignored here and cleaned elsewhere.
-      var category = Categories.findOne({'_id': sub._id});
+      var category = Categories.findOne({
+        '_id': sub._id
+      });
       if (category) {
         categories.push(category);
       }
@@ -74,7 +76,7 @@ Template.category.events({
       owner: Meteor.userId(),
       category_id: category['_id'],
       timestamp: timestamp,
-      value: values,
+      value: values
     };
     if (userLocation) {
       var coords = userLocation.coords;
@@ -85,6 +87,5 @@ Template.category.events({
     Data.insert(data);
 
     Meteor.Router.to('main');
-  },
+  }
 });
-
