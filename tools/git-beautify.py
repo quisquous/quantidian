@@ -15,7 +15,7 @@ def beautify_all_files():
         return
 
     path_to_script = os.path.dirname(os.path.realpath(__file__))
-    beautify_js = os.path.join(path_to_script, 'beautify.js')
+    beautify_js = os.path.join(path_to_script, 'beautifyjs')
 
     child = subprocess.Popen(['git', 'ls-files'], stdout=subprocess.PIPE)
     for filename in child.stdout.readlines():
