@@ -1,5 +1,7 @@
 function defaultCategories() {
-  return Categories.find({default_category:true}).fetch();
+  return Categories.find({
+    default_category: true
+  }).fetch();
 }
 
 function defaultSubscriptions() {
@@ -7,7 +9,7 @@ function defaultSubscriptions() {
     function(item) {
       return {
         _id: item._id,
-        enable: true,
+        enable: true
       };
     }
   );
@@ -16,7 +18,8 @@ function defaultSubscriptions() {
 
 function generateApiKey() {
   var keyLength = 32;
-  var charSet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+  var charSet =
+    '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
   var key = [];
 
   while (key.length < keyLength) {
