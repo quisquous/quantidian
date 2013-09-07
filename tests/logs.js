@@ -40,7 +40,7 @@ function allClientLogs(client) {
 }
 
 suite('logs', function() {
-  authTest('simple insert', function(done, server, client) {
+  var insertAndVerify = function(client) {
     var inserted = {};
     var logOrder = [];
 
@@ -52,7 +52,8 @@ suite('logs', function() {
 
     function insertText(catId, text) {
       var logId = insertTextData(client, catId, text);
-      assert.property(inserted, catId);
+      assert.property(inserted, catId,
+        'test sanity check that category already added');
       inserted[catId].push(logId);
       logOrder.push(logId);
       return logId;
@@ -70,17 +71,28 @@ suite('logs', function() {
     insertTextData(client, cat2, '6');
 
     var logs = allClientLogs(client);
-    assert.strictEqual(logs.length, logOrder.length, 'fetched all logs');
+    assert.strictEqual(logs.length, logOrder.length,
+      'fetched all/only logs for client');
     var idx = 0;
     _.each(logs, function(log) {
       assert.strictEqual(log._id, logOrder[idx],
         'fetched logs in same order');
-      assert.property(log.category_id);
+      assert.property(log.category_id, 'log has category id');
       assert.contains(inserted[log.category_id], log._id,
         'category correct');
       idx++;
     });
+  };
 
+  authTest('simple insert', function(done, server, client) {
+    insertAndVerify(client);
+    done();
+  });
+
+  authTest('two clients', function(done, server, client1, client2) {
+    // Logs from client1 should not be visible to client2
+    insertAndVerify(client1);
+    insertAndVerify(client2);
     done();
   });
 });
