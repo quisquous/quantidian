@@ -1,7 +1,11 @@
 async = require('async');
 request = require('request');
 
-suite('api', function() {
+var defaultSkip = 0;
+var defaultLimit = 200;
+var maxLimit = 200;
+
+suite('log api', function() {
   var addLogs = function(server, user, maxRecords, numOffset) {
     assert.operator(user.subscriptions.length, '>', 0);
 
@@ -80,10 +84,6 @@ suite('api', function() {
           'found right log');
       }
     };
-
-    var defaultSkip = 0;
-    var defaultLimit = 200;
-    var maxLimit = 200;
 
     // Expects success; verifies that skip and limit are respected.
     var callSuccess = function(skip, limit) {
@@ -210,6 +210,78 @@ suite('api', function() {
       // 403 error if pass both, but they're wrong.
       testAuthentication(user1._id, notAPIKey1, 403),
       testAuthentication(user2._id, notAPIKey2, 403)
+    ], function() {
+      done();
+    });
+  });
+
+  test('bad form values', function(done, server) {
+    var uri = server.evalSync(function() {
+      emit('return', Meteor.absoluteUrl('api/logs'));
+    });
+
+    var user = createTestUser(server, 0);
+    var testParams = function(form) {
+      return function(callback) {
+        var caseInfo = JSON.stringify(form);
+        form.user = user._id;
+        form.apikey = user.apikey;
+        request.post(uri, {
+          form: form
+        }, function(error, response, body) {
+          assert.equal(response.statusCode, 400, 'status code for ' +
+            caseInfo);
+          callback();
+        });
+      };
+    };
+
+    async.parallel([
+      // Bad param names
+      testParams({
+        bogus: true
+      }),
+      testParams({
+        bogus: true,
+        alsobogus: 1
+      }),
+      testParams({
+        skip: 2,
+        limit: 5,
+        bogus: true
+      }),
+
+      // Bad values
+      testParams({
+        skip: -1
+      }),
+      testParams({
+        skip: -1,
+        limit: 50
+      }),
+      testParams({
+        limit: -1
+      }),
+      testParams({
+        limit: 0
+      }),
+      testParams({
+        limit: maxLimit + 1
+      }),
+
+      // Bad types
+      testParams({
+        skip: 'not an int'
+      }),
+      testParams({
+        limit: true
+      }),
+      testParams({
+        skip: 3.1
+      }),
+      testParams({
+        limit: [1, 2, 3]
+      })
     ], function() {
       done();
     });
