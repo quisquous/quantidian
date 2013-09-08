@@ -5,6 +5,13 @@ var defaultSkip = 0;
 var defaultLimit = 200;
 var maxLimit = 200;
 
+function logUri(server) {
+  var uri = server.evalSync(function() {
+    emit('return', Meteor.absoluteUrl('api/logs'));
+  });
+  return uri;
+}
+
 suite('log api', function() {
   var addLogs = function(server, user, maxRecords, numOffset) {
     assert.operator(user.subscriptions.length, '>', 0);
@@ -30,9 +37,7 @@ suite('log api', function() {
   };
 
   var testLogAPI = function(callback, server, user, maxRecords, numOffset) {
-    var uri = server.evalSync(function() {
-      emit('return', Meteor.absoluteUrl('api/logs'));
-    });
+    var uri = logUri(server);
 
     var callLogApi = function(skip, limit, callback) {
       var form = {
@@ -161,9 +166,7 @@ suite('log api', function() {
   });
 
   test('bad authentication', function(done, server) {
-    var uri = server.evalSync(function() {
-      emit('return', Meteor.absoluteUrl('api/logs'));
-    });
+    var uri = logUri(server);
 
     var testAuthentication = function(user, apikey, statusCode) {
       return function(callback) {
@@ -216,10 +219,7 @@ suite('log api', function() {
   });
 
   test('bad form values', function(done, server) {
-    var uri = server.evalSync(function() {
-      emit('return', Meteor.absoluteUrl('api/logs'));
-    });
-
+    var uri = logUri(server);
     var user = createTestUser(server, 0);
     var testParams = function(form) {
       return function(callback) {
