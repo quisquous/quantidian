@@ -121,11 +121,13 @@ suite('api', function() {
   };
 
   test('one client no logs', function(done, server) {
+    // Calling logs apis still valid even with no logs.
     var user1 = createTestUser(server, 0);
     testLogAPI(done, server, user1, 0, 0);
   });
 
   test('one client with logs', function(done, server) {
+    // Well-formed log requests when logs exist behave properly.
     var user1 = createTestUser(server, 0);
     var maxRecords = 300;
     var testRandomOffset = 123;
@@ -134,6 +136,7 @@ suite('api', function() {
   });
 
   test('two clients', function(done, server) {
+    // Two clients can't see the others logs.
     var user1 = createTestUser(server, 0);
     var user2 = createTestUser(server, 1);
     var maxRecords1 = 150;
@@ -152,6 +155,61 @@ suite('api', function() {
         testLogAPI(callback, server, user2, maxRecords2,
           testRandomOffset2);
       }
+    ], function() {
+      done();
+    });
+  });
+
+  test('bad authentication', function(done, server) {
+    var uri = server.evalSync(function() {
+      emit('return', Meteor.absoluteUrl('api/logs'));
+    });
+
+    var testAuthentication = function(user, apikey, statusCode) {
+      return function(callback) {
+        var form = {};
+        if (user !== undefined) {
+          form.user = user;
+        }
+        if (apikey !== undefined) {
+          form.apikey = apikey;
+        }
+        request.post(uri, {
+          form: form
+        }, function(error, response, body) {
+          var caseInfo = JSON.stringify({
+            user: user,
+            apikey: apikey
+          });
+          assert.equal(response.statusCode, statusCode,
+            'status code for ' + caseInfo);
+          callback();
+        });
+      };
+    };
+
+    var user1 = createTestUser(server, 0);
+    var user2 = createTestUser(server, 1);
+
+    // apikeys are randomly generated so may be the same between users.
+    var notAPIKey1 = user2.apikey;
+    if (notAPIKey1 === user1.apikey) {
+      notAPIKey1 += 'x';
+    }
+    var notAPIKey2 = user1.apikey;
+    if (notAPIKey2 === user2.apikey) {
+      notAPIKey2 += 'x';
+    }
+
+    async.parallel([
+      // apikey and user are required, so 400 if missing.
+      testAuthentication(undefined, undefined, 400),
+      testAuthentication(user2._id, undefined, 400),
+      testAuthentication(undefined, user1.apikey, 400),
+
+      // 403 error if pass both, but they're wrong.
+      testAuthentication(user1._id, notAPIKey1, 403),
+      testAuthentication(user2._id, notAPIKey2, 403)
     ], function() {
       done();
     });
