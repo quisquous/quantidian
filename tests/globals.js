@@ -14,10 +14,15 @@ var testUsers = [{
 createTestUser = function(server, userIdx) {
   userIdx = userIdx || 0;
   var user = testUsers[userIdx];
-  server.evalSync(function(user) {
-    Accounts.createUser(user);
-    emit('return');
+
+  var newUser = server.evalSync(function(user) {
+    var newId = Accounts.createUser(user);
+    var newUser = Meteor.users.findOne({
+      _id: newId
+    });
+    emit('return', newUser);
   }, user);
+  return newUser;
 };
 
 loginAsTestUser = function(client, userIdx) {

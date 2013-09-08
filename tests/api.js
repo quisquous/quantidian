@@ -1,0 +1,159 @@
+async = require('async');
+request = require('request');
+
+suite('api', function() {
+  var addLogs = function(server, user, maxRecords, numOffset) {
+    assert.operator(user.subscriptions.length, '>', 0);
+
+    server.evalSync(function(user, maxRecords, numOffset) {
+      var addLog = function(num) {
+        var catId = user.subscriptions[0]._id;
+        var data = {
+          owner: user._id,
+          category_id: catId,
+          // Ensure that time moves forward.
+          timestamp: new Date().getTime() + num,
+          values: [num + numOffset]
+        };
+        Data.insert(data);
+      };
+
+      for (var i = 0; i < maxRecords; ++i) {
+        addLog(i);
+      }
+      emit('return');
+    }, user, maxRecords, numOffset);
+  };
+
+  var testLogAPI = function(callback, server, user, maxRecords, numOffset) {
+    var uri = server.evalSync(function() {
+      emit('return', Meteor.absoluteUrl('api/logs'));
+    });
+
+    var callLogApi = function(skip, limit, callback) {
+      var form = {
+        user: user._id,
+        apikey: user.apikey
+      };
+      if (skip !== undefined) {
+        form.skip = skip;
+      }
+      if (limit !== undefined) {
+        form.limit = limit;
+      }
+
+      request.post(uri, {
+        form: form
+      }, function() {
+        callback.apply(this, arguments);
+      });
+    };
+
+    var verifyLogs = function(body, skip, limit) {
+      var logs = JSON.parse(body);
+      var expectedNumLogs = Math.max(Math.min(skip + limit, maxRecords) -
+        skip, 0);
+      assert.strictEqual(logs.length, expectedNumLogs);
+
+      var caseInfo = JSON.stringify({
+        skip: skip,
+        limit: limit
+      }) + ': ';
+
+      var lastTime;
+      for (var idx = 0; idx < limit; ++idx) {
+        if (idx + skip >= maxRecords) {
+          break;
+        }
+        assert.operator(logs.length, '>=', idx, caseInfo +
+          'right number of logs');
+        var log = logs[idx];
+
+        if (lastTime !== undefined) {
+          assert.operator(log.timestamp, '>', lastTime, caseInfo +
+            'sorted logs');
+        }
+        lastTime = log.timestamp;
+
+        var num = log.values[0];
+        assert.equal(num, idx + skip + numOffset, caseInfo +
+          'found right log');
+      }
+    };
+
+    var defaultSkip = 0;
+    var defaultLimit = 200;
+    var maxLimit = 200;
+
+    // Expects success; verifies that skip and limit are respected.
+    var callSuccess = function(skip, limit) {
+      return function(callback) {
+        callLogApi(skip, limit, function(error, response, body) {
+          if (skip < 0) {
+            callback();
+            return;
+          }
+          assert.isNull(error);
+          if (skip === undefined) {
+            skip = defaultSkip;
+          }
+          if (limit === undefined) {
+            limit = defaultLimit;
+          }
+          verifyLogs(body, skip, limit);
+          callback();
+        });
+      }
+    };
+
+    async.parallel([
+      callSuccess(undefined, undefined),
+      callSuccess(0, 200),
+      callSuccess(undefined, 1),
+      callSuccess(2, undefined),
+      // Skip past the end of the records.
+      callSuccess(maxRecords, undefined),
+      // Skip exactly to the end of the records.
+      callSuccess(maxRecords - defaultLimit, undefined)
+    ], function() {
+      callback();
+    });
+  };
+
+  test('one client no logs', function(done, server) {
+    var user1 = createTestUser(server, 0);
+    testLogAPI(done, server, user1, 0, 0);
+  });
+
+  test('one client with logs', function(done, server) {
+    var user1 = createTestUser(server, 0);
+    var maxRecords = 300;
+    var testRandomOffset = 123;
+    addLogs(server, user1, maxRecords, testRandomOffset);
+    testLogAPI(done, server, user1, maxRecords, testRandomOffset);
+  });
+
+  test('two clients', function(done, server) {
+    var user1 = createTestUser(server, 0);
+    var user2 = createTestUser(server, 1);
+    var maxRecords1 = 150;
+    var maxRecords2 = 350;
+    var testRandomOffset1 = 13484;
+    var testRandomOffset2 = 581;
+    addLogs(server, user1, maxRecords1, testRandomOffset1);
+    addLogs(server, user2, maxRecords2, testRandomOffset2);
+
+    async.parallel([
+      function(callback) {
+        testLogAPI(callback, server, user1, maxRecords1,
+          testRandomOffset1);
+      },
+      function(callback) {
+        testLogAPI(callback, server, user2, maxRecords2,
+          testRandomOffset2);
+      }
+    ], function() {
+      done();
+    });
+  });
+});
