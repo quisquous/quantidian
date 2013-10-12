@@ -100,6 +100,12 @@ function valueToString(category_id, values) {
       thisValue = '???';
     }
 
+    if (thisValue == '') {
+      if (question.optional)
+        continue;
+      thisValue = '(blank)';
+    }
+
     if (valueString === '') {
       valueString = thisValue;
     } else {
