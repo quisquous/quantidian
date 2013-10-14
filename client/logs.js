@@ -44,15 +44,11 @@ Template.recentCategoryLogEntries.recentLogs = function() {
   return getLogs(5, category_id);
 };
 
-Template.logs.stringifyLog = function() {
+Template.logLine.stringifyLog = function() {
   return stringifyLog(this);
 };
 
-Template.recentLogEntries.stringifyLog = function() {
-  return stringifyLog(this);
-};
-
-Template.recentCategoryLogEntries.stringifyLog = function() {
+Template.logLineJustValue.stringifyLog = function() {
   return stringifyLogValue(this);
 };
 
