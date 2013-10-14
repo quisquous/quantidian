@@ -3,7 +3,10 @@
   "dependencies": {
     "basePackages": {
       "router": {},
-      "fries": {},
+      "fries": {
+        "git": "https://github.com/quisquous/meteor-fries.git",
+        "tag": "v1.0.0a-no_stack"
+      },
       "timeago": {}
     },
     "packages": {

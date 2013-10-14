@@ -1,7 +1,11 @@
 {
   "packages": {
     "router": {},
-    "fries": {},
+    "fries": {
+      "git": "https://github.com/quisquous/meteor-fries.git",
+      "tag": "v1.0.0a-no_stack",
+      "commit": "dc62b3bc507d5492d5678e3bb8ba5c4765a254cf"
+    },
     "timeago": {}
   }
 }
