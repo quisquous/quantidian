@@ -46,14 +46,14 @@ limitations under the License.
 
 <template name="logLine">
   <li class="list-item-single-line">
-    {{stringifyLog}}
-    ({{timeago timestamp}})
+    <span class="lefttext">{{stringifyLog}}</span>
+    <span class="righttext secondarytext">({{timeago timestamp}})</span>
   </li>
 </template>
 
 <template name="logLineJustValue">
   <li class="list-item-single-line">
-    {{stringifyLog}}
-    ({{timeago timestamp}})
+    <span class="lefttext">{{stringifyLog}}</span>
+    <span class="righttext secondarytext">({{timeago timestamp}})</span>
   </li>
 </template>
