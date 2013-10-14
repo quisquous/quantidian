@@ -1,6 +1,7 @@
 {
   "packages": {
     "router": {},
-    "fries": {}
+    "fries": {},
+    "timeago": {}
   }
 }
