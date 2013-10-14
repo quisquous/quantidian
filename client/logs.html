@@ -19,7 +19,10 @@ limitations under the License.
     <ul class="list inset">
       <li class="list-divider">Recent logs</li>
       {{#each recentLogs}}
-        <li class="list-item-single-line">{{stringifyLog}}</li>
+        <li class="list-item-single-line">
+          {{stringifyLog}}
+          ({{timeago timestamp}})
+        </li>
       {{/each}}
     </ul>
   {{/if}}
@@ -30,7 +33,10 @@ limitations under the License.
     <ul class="list inset">
       <li class="list-divider">Recent logs from this category</li>
       {{#each recentLogs}}
-        <li class="list-item-single-line">{{stringifyLog}}</li>
+        <li class="list-item-single-line">
+          {{stringifyLog}}
+          ({{timeago timestamp}})
+        </li>
       {{/each}}
     </ul>
   {{/if}}
@@ -39,7 +45,10 @@ limitations under the License.
 <template name="logs">
   <ul class="list inset">
     {{#each allLogs}}
-      <li class="list-item-single-line">{{stringifyLog}}</li>
+      <li class="list-item-single-line">
+        {{stringifyLog}}
+        ({{timeago timestamp}})
+      </li>
     {{/each}}
   </ul>
 </template>

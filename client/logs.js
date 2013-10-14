@@ -53,16 +53,19 @@ Template.recentLogEntries.stringifyLog = function() {
 };
 
 Template.recentCategoryLogEntries.stringifyLog = function() {
-  return stringifyLog(this);
+  return stringifyLogValue(this);
 };
 
 function stringifyLog(entry) {
   var category = categoryToString(entry.category_id);
   var value = valueToString(entry.category_id, entry.value);
-  var dateString = dateToString(entry.timestamp);
   if (!category || !value)
     return;
-  return category + ': ' + value + ' (' + dateString + ')';
+  return category + ': ' + value;
+}
+
+function stringifyLogValue(entry) {
+  return valueToString(entry.category_id, entry.value);
 }
 
 function categoryToString(id) {
@@ -113,10 +116,4 @@ function valueToString(category_id, values) {
     }
   }
   return valueString;
-}
-
-function dateToString(timestamp) {
-  // FIXME: Do something smarter here like "5 minutes ago"
-  var date = new Date(timestamp);
-  return date.toDateString() + ' ' + date.toTimeString();
 }
